@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+    
+    <entry>
+      <title><![CDATA[JS中的函数]]></title>
+      <url>/2017/01/23/hello-world/</url>
+      <content type="html"><![CDATA[<p>普通函数<br>返回 return 语句的值</p>
+<pre><code class="javascript">function add(x, y) {
+    return x + y;
+}
+</code></pre>
+<p>async函数<br>返回 Promise 对象</p>
+<pre><code class="javascript">async function asyncPrint(value, ms) {
+    await timeout(ms);
+    console.log(value);
+}
+</code></pre>
+<p>Generater 函数<br>返回同步 Iterator 对象</p>
+<pre><code class="javascript">function* gen(x, y){
+    yield x + y;
+}
+</code></pre>
+<p>异步 Generater 函数<br>返回异步 Iterator 对象</p>
+<pre><code class="javascript">async function* asyncGenerator() {
+    const result = await doSomethingAsync();
+    yield &#39;Result: &#39; + result;
+}
+</code></pre>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> Javascript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+  
+  
+</search>
