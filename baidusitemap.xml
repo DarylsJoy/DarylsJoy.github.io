@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+  <url>
+    <loc>/2018/02/16/happy-new-year.html</loc>
+    <lastmod>2018-02-15T21:19:45.176Z</lastmod>
+    <data>
+        <display>
+        <title>新年好，一点简单总结</title>
+        <pubTime>2018-02-15T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="LIFE" url="/categories/LIFE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/03/09/js-2048.html</loc>
+    <lastmod>2018-02-15T21:19:41.808Z</lastmod>
+    <data>
+        <display>
+        <title>JavaScript 2048</title>
+        <pubTime>2017-03-08T16:00:00.000Z</pubTime>
+        
+        <tag>jQuery</tag>
+         
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/01/31/web-storage.html</loc>
+    <lastmod>2018-02-15T21:19:40.059Z</lastmod>
+    <data>
+        <display>
+        <title>Cookie、sessionStorage、localStorage是什么</title>
+        <pubTime>2017-01-30T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/02/03/let-vs-var.html</loc>
+    <lastmod>2018-02-15T21:19:39.026Z</lastmod>
+    <data>
+        <display>
+        <title>JS中let和var定义变量的区别</title>
+        <pubTime>2017-02-02T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/02/27/js-stack-and-quene.html</loc>
+    <lastmod>2018-02-15T21:19:37.447Z</lastmod>
+    <data>
+        <display>
+        <title>JavaScript数据结构——栈和队列</title>
+        <pubTime>2017-02-26T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/01/23/js-function-types.html</loc>
+    <lastmod>2018-02-15T21:19:35.985Z</lastmod>
+    <data>
+        <display>
+        <title>JS中的函数</title>
+        <pubTime>2017-01-22T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/02/08/how-to-load-js.html</loc>
+    <lastmod>2018-02-15T21:19:31.707Z</lastmod>
+    <data>
+        <display>
+        <title>加载和执行JS的正确姿势</title>
+        <pubTime>2017-02-07T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/06/16/js-immutable.html</loc>
+    <lastmod>2018-02-15T21:05:25.381Z</lastmod>
+    <data>
+        <display>
+        <title>Immutable.js 简单总结</title>
+        <pubTime>2017-06-15T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/05/07/react-component-createclass-different.html</loc>
+    <lastmod>2018-02-15T21:02:07.782Z</lastmod>
+    <data>
+        <display>
+        <title>React.Component与React.createClass的区别</title>
+        <pubTime>2017-05-06T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/04/23/js-drag.html</loc>
+    <lastmod>2018-02-15T20:58:02.737Z</lastmod>
+    <data>
+        <display>
+        <title>原生JS实现简单的拖拽功能</title>
+        <pubTime>2017-04-22T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/04/12/js-treewalker.html</loc>
+    <lastmod>2018-02-15T20:40:38.415Z</lastmod>
+    <data>
+        <display>
+        <title>JS原生API遍历DOM树的简单实例</title>
+        <pubTime>2017-04-11T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/04/07/js-array-reduce.html</loc>
+    <lastmod>2018-02-15T20:37:10.790Z</lastmod>
+    <data>
+        <display>
+        <title>JS中数组的reduce方法</title>
+        <pubTime>2017-04-06T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/04/04/bigsaying.html</loc>
+    <lastmod>2018-02-15T20:28:04.905Z</lastmod>
+    <data>
+        <display>
+        <title>随机获取名言，可分享到微博</title>
+        <pubTime>2017-04-03T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/04/03/js-collections.html</loc>
+    <lastmod>2018-02-15T20:24:06.141Z</lastmod>
+    <data>
+        <display>
+        <title>JS的类数组对象HTMLCollection,NodeList,arguments</title>
+        <pubTime>2017-04-02T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/04/02/mobile-fast-click.html</loc>
+    <lastmod>2018-02-15T20:16:45.168Z</lastmod>
+    <data>
+        <display>
+        <title>移动端点击事件的延迟你感觉到了吗？</title>
+        <pubTime>2017-04-01T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/03/19/react-todolist.html</loc>
+    <lastmod>2018-02-15T19:56:15.971Z</lastmod>
+    <data>
+        <display>
+        <title>React实现TodoList</title>
+        <pubTime>2017-03-18T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+        <tag>React</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/03/15/js-set-array-unique.html</loc>
+    <lastmod>2018-02-15T19:45:21.828Z</lastmod>
+    <data>
+        <display>
+        <title>Set：我可不是数组</title>
+        <pubTime>2017-03-14T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/03/14/js-delegate.html</loc>
+    <lastmod>2018-02-15T19:37:39.772Z</lastmod>
+    <data>
+        <display>
+        <title>JavaScript中的事件代理</title>
+        <pubTime>2017-03-13T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/03/11/canvas-stupid-gobang.html</loc>
+    <lastmod>2018-02-15T19:19:25.375Z</lastmod>
+    <data>
+        <display>
+        <title>一个愚蠢的五子棋</title>
+        <pubTime>2017-03-10T16:00:00.000Z</pubTime>
+        
+        <tag>canvas</tag>
+         
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/03/25/js-this.html</loc>
+    <lastmod>2018-02-15T19:04:06.155Z</lastmod>
+    <data>
+        <display>
+        <title>JavaScript中的this</title>
+        <pubTime>2017-03-24T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/03/21/canvas-transtion.html</loc>
+    <lastmod>2018-02-15T18:54:52.412Z</lastmod>
+    <data>
+        <display>
+        <title>canvas图形的平移，缩放，旋转</title>
+        <pubTime>2017-03-20T16:00:00.000Z</pubTime>
+        
+        <tag>canvas</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/02/17/canvas-magic.html</loc>
+    <lastmod>2018-02-15T18:53:11.065Z</lastmod>
+    <data>
+        <display>
+        <title>Canvas 魔法</title>
+        <pubTime>2017-02-16T16:00:00.000Z</pubTime>
+        
+        <tag>HTML5</tag>
+         
+        <tag>canvas</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/03/04/line-height-u-dont-know.html</loc>
+    <lastmod>2018-02-15T18:50:56.510Z</lastmod>
+    <data>
+        <display>
+        <title>你不知道的line-height</title>
+        <pubTime>2017-03-03T16:00:00.000Z</pubTime>
+        
+        <tag>CSS</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/02/21/css-3d-box.html</loc>
+    <lastmod>2018-02-15T17:39:17.226Z</lastmod>
+    <data>
+        <display>
+        <title>这是个盒子</title>
+        <pubTime>2017-02-20T16:00:00.000Z</pubTime>
+        
+        <tag>CSS</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/02/12/get-or-post.html</loc>
+    <lastmod>2018-02-15T17:06:50.779Z</lastmod>
+    <data>
+        <display>
+        <title>GET和POST的区别</title>
+        <pubTime>2017-02-11T16:00:00.000Z</pubTime>
+        
+        <tag>HTTP</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2017/02/07/url2page-process.html</loc>
+    <lastmod>2018-02-15T15:20:27.237Z</lastmod>
+    <data>
+        <display>
+        <title>从输入URL到页面加载发生了什么</title>
+        <pubTime>2017-02-06T16:00:00.000Z</pubTime>
+        
+        <tag>HTTP</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+    
+    
+    
+</urlset>

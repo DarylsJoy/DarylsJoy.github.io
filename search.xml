@@ -3,36 +3,1782 @@
   
     
     <entry>
-      <title><![CDATA[JS中的函数]]></title>
-      <url>/2017/01/23/hello-world/</url>
-      <content type="html"><![CDATA[<p>普通函数<br>返回 return 语句的值</p>
-<pre><code class="javascript">function add(x, y) {
-    return x + y;
-}
-</code></pre>
-<p>async函数<br>返回 Promise 对象</p>
-<pre><code class="javascript">async function asyncPrint(value, ms) {
-    await timeout(ms);
-    console.log(value);
-}
-</code></pre>
-<p>Generater 函数<br>返回同步 Iterator 对象</p>
-<pre><code class="javascript">function* gen(x, y){
-    yield x + y;
-}
-</code></pre>
-<p>异步 Generater 函数<br>返回异步 Iterator 对象</p>
-<pre><code class="javascript">async function* asyncGenerator() {
-    const result = await doSomethingAsync();
-    yield &#39;Result: &#39; + result;
-}
-</code></pre>
-]]></content>
+      <title><![CDATA[新年好，一点简单总结]]></title>
+      <url>/2018/02/16/happy-new-year.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>忙碌的实习告一段落</p><p>因为实习忙(lan)好久没有更新的博客可能已经长草了，简单总结</p><p>+ 工程实践能力<br>+ 钱包余额<br>+ 体重</p><p>- 头发<br>- 自由时间</p><p>这段时间发现了一些比较有趣的项目，未来几天慢慢总结一下。<br>新年快乐~</p><!-- rebuild by neat -->]]></content>
       
+        <categories>
+            
+            <category> LIFE </category>
+            
+        </categories>
+        
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Immutable.js 简单总结]]></title>
+      <url>/2017/06/16/js-immutable.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>Immutable.js是比较流行的Immutable库，<a href="http://facebook.github.io/immutable-js/docs/" target="_blank" rel="noopener">文档</a><br>其中常用的API：</p><h3 id="fromJS"><a href="#fromJS" class="headerlink" title="fromJS()"></a>fromJS()</h3><p>fromJS() 是最最最常用的将原生JS数据转换为ImmutableJS数据的转换方法。使用方式类似于 JSON.parse()，接收两个参数：json 数据和 reviver 函数。 在不传递reviver函数的情况下，默认将原生JS的Array转为List，Object转为Map.</p><pre><code class="JavaScript">const t1 = Immutable.fromJS({a: {b: [10, 20, 30]}, c: 40})
+</code></pre><h3 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h3><p>Map 数据类型，对应原生 Object 数组。最最常用的 数据结构之一，循环时无序(orderedMap有序)，对象的 key 可以是任意值</p><pre><code class="JavaScript">console.log(Map().set(List.of(1), &#39;list-of-one&#39;).get(List.of(1)))
+console.log(Map().set(NaN, &#39;NaN&#39;).get(NaN))
+console.log(Map().set(undefined, &#39;undefined&#39;).get(undefined))
+console.log(Map().set(null, &#39;null&#39;).get(null))
+</code></pre><h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><p>List 数据类型，对应原生 Array 数组。和原生数组，最大区别不存在’空位’。[, , , , ]</p><pre><code class="JavaScript">console.log(List([,,,,]).toJS());// [undefined, undefined, undefined, undefined]
+</code></pre><p>pop、push、shift、unshift</p><p>List数据类型也拥有pop、push、shift、unshift这四种操作方法，和原生Array的四种方法使用方式一致，但唯一区别就是返回新的List，并且不改变原来的数组本身，而原生则是会改变元素本身。</p><pre><code class="JavaScript">// ImmutableJS：返回新的List，并且不改变元素本身
+const $test = List([1, 2, 3, 4]);
+console.log($test.pop().toJS(), $test.toJS()); // [1, 2, 3] [1, 2, 3, 4]
+// 原生：返回被改变的值，改变元素本身
+const test = [1, 2, 3, 4];
+console.log(test.pop(), test); // 4 [1, 2, 3]
+</code></pre><h3 id="与React的结合"><a href="#与React的结合" class="headerlink" title="与React的结合"></a>与React的结合</h3><p>React 提供的PureRenderMixin是浅比较，如果对象包含了复杂的数据结构，深层次的差异可能会产生误判。<br>利用 Immutable.js 不可变的特性，可以极大的优化React的render。<br>immutable-pure-render-decorator</p><p>专门针对immutable的PureRenderMixin，用来装饰React组件。</p><pre><code class="JavaScript">import {React} from &#39;base&#39;;
+import pureRenderDecorator from &#39;../../../widgets/libs/immutable-pure-render-decorator&#39;;
+
+@pureRenderDecorator
+export default class PartA extends React.Component {
+    constructor(props) {
+        super(props);
+        // 舍弃React.addons.PureRenderMixin
+        // this.shouldComponentUpdate = React.addons.PureRenderMixin.shouldComponentUpdate.bind(this);
+    }
+
+    render() {
+        console.log(&#39;组件PartA，render执行了&#39;);
+        const data = this.props.data;
+        return (
+            &lt;section&gt;
+                &lt;div&gt;
+                    &lt;p&gt;我是组件PartA&lt;/p&gt;
+                    &lt;p&gt;{data.toJSON ? JSON.stringify(data.toJSON()) : data}&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/section&gt;
+        )
+    }
+}
+</code></pre><p>虽然他带来了许多好处，但是需要额外学习的结构与各种方法还是会增大开发的成本，使用不熟练的话还容易与原生混淆，总之耐心学习，切勿滥用。</p><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
         
         <tags>
             
-            <tag> Javascript </tag>
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[React.Component与React.createClass的区别]]></title>
+      <url>/2017/05/07/react-component-createclass-different.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><h3 id="语法区别"><a href="#语法区别" class="headerlink" title="语法区别"></a>语法区别</h3><p>React.createClass本质上是一个工厂函数，方法定义使用逗号隔开，因为传递给它的是一个Object。<br>extends React.Component为ES6规范的class写法，方法不要使用逗号隔开，这是ES6 class的语法规范。</p><h3 id="状态的区别"><a href="#状态的区别" class="headerlink" title="状态的区别"></a>状态的区别</h3><p>React.createClass：通过getInitialState()方法返回一个包含初始值的对象</p><pre><code class="JavaScript">let MyComponent = React.createClass({
+  // return an object
+  getInitialState() {
+    return {
+      // ...
+    }
+  }
+})
+</code></pre><p>React.Component：通过constructor设置初始状态</p><pre><code class="JavaScript">class MyComponent extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+
+    // initial state
+    this.state = {
+      // ...
+    };
+  }
+}
+</code></pre><h3 id="this"><a href="#this" class="headerlink" title="this"></a>this</h3><p>React.createClass：会绑定this</p><pre><code class="JavaScript">const MyComponent = React.createClass({
+  handleClick() {
+    console.log(this); // React Component instance
+  },
+  render() {
+    return (
+      &lt;div onClick={this.handleClick}&gt;&lt;/div&gt; // 会切换到正确的this上下文
+    );
+  }
+});
+</code></pre><p>React.Component：不会绑定到 React 的实例上。</p><pre><code class="JavaScript">class MyComponent extends React.Component {
+  constructor(props){
+    super(props);
+  }
+  handleClick(){
+    console.log(this); // null
+  }
+  handleFocus(){  // bind this
+    console.log(this); // React Component Instance
+  }
+  handleBlur: ()=&gt;{  // 箭头函数
+    console.log(this); // React Component Instance
+  }
+  render(){
+    return &lt;input onClick={this.handleClick} 
+                  onFocus={this.handleFocus.bind(this)} 
+                  onBlur={this.handleBlur}/&gt;
+  }
+}
+</code></pre><p>还可以在 constructor 中来改变 this.handleClick 执行的上下文，这样可以避免项目改动时 render 部分的改动。</p><pre><code class="JavaScript">class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick() {
+    console.log(this); // React Component instance
+  }
+  render() {
+    return (
+      &lt;div onClick={this.handleClick}&gt;&lt;/div&gt;
+    );
+  }
+}
+</code></pre><h3 id="Mixins"><a href="#Mixins" class="headerlink" title="Mixins"></a>Mixins</h3><p>React.createClass：可以在创建组件时添加一个叫做 mixins 的属性，使用这个 mixin 的组件能够自由的使用这些方法。</p><pre><code class="JavaScript">let MyMixin = {
+  doSomething() {}
+}
+let MyComponent = React.createClass({
+  mixins: [MyMixin],  // add mixin
+  render() {
+    return &lt;div&gt;&lt;/div&gt;
+  }
+})
+</code></pre><p>React.Component：不能够使用React的mixins机制。可以把<a href="https://www.jianshu.com/p/1eaa48067a86" target="_blank" rel="noopener">高阶组件</a>当作一个替代方法。</p><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[原生JS实现简单的拖拽功能]]></title>
+      <url>/2017/04/23/js-drag.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>Demo：<a href="http://demo.daryldong.com/Ddrag/" target="_blank" rel="noopener">点我</a><br>道理很简单，就是当相关的鼠标事件发生后修改已经绝对定位的元素的left与top值。</p><pre><code class="HTML">&lt;div class=&quot;drag-box&quot;&gt;
+  &lt;div class=&quot;drag-bar&quot;&gt;拖动我试试&lt;/div&gt;
+&lt;/div&gt;
+</code></pre><pre><code class="JavaScript">gragTarget.addEventListener(&#39;mousedown&#39;, (event) =&gt; {
+  this.params.flag = true;
+  let e = event || window.event;
+  this.params.currentX = e.clientX;
+  this.params.currentY = e.clientY;
+  gragTarget.onselectstart = () =&gt; { return false; }
+});
+document.addEventListener(&#39;mouseup&#39;, () =&gt; {
+  this.params.flag = false;
+  if (this.getPosition(moveTarget, &#39;left&#39;) !== &#39;auto&#39;) {
+    this.params.left = this.getPosition(moveTarget, &#39;left&#39;);
+  }
+  if (this.getPosition(moveTarget, &#39;top&#39;) !== &#39;auto&#39;) {
+    this.params.top = this.getPosition(moveTarget, &#39;top&#39;);
+  }
+});
+document.addEventListener(&#39;mousemove&#39;, (event) =&gt; {
+  let e = event || window.event;
+  if (this.params.flag) {
+    let nowX = e.clientX, nowY = e.clientY;
+    let disX = nowX - this.params.currentX, disY = nowY - this.params.currentY;
+    moveTarget.style.left = parseInt(this.params.left) + disX + &#39;px&#39;;
+    moveTarget.style.top = parseInt(this.params.top) + disY + &#39;px&#39;;
+    if (typeof callback === &#39;function&#39;) {
+      callback(parseInt(this.params.left) + disX, parseInt(this.params.top) + disY);
+    }
+  }
+});
+</code></pre><p>为了在一个页面中存在多个可拖拽的对象并使用方便，把整个功能封装成了类，如下。</p><pre><code class="JavaScript">const Ddrag = function (gragTarget, moveTarget, callback) {
+  // 相关参数
+  this.params = {
+    left: 0,
+    top: 0,
+    currentX: 0,
+    currentY: 0,
+    flag: false
+  };
+  this.gragTarget = gragTarget;
+  this.moveTarget = moveTarget;
+  this.callback = callback;
+};
+</code></pre><p>参数依次为鼠标拖拽的元素、进行移动的元素、回调函数。<br>回调函数是可选参数，它的两个参数是元素相对于(0, 0)点的坐标(x, y)</p><pre><code class="JavaScript">// 获取元素位置
+Ddrag.prototype.getPosition = (obj, key) =&gt; {
+  return obj.currentStyle ? obj.currentStyle[key] : window.getComputedStyle(obj)[key];
+};
+
+// 开始监听事件
+Ddrag.prototype.init = function(gragTarget = this.gragTarget, moveTarget = this.moveTarget, callback = this.callback) {
+  // ...
+};
+</code></pre><p>实例化</p><pre><code class="JavaScript">const printPosition = (...args) =&gt; {
+ console.log(args);
+};
+let dragBox = document.querySelectorAll(&#39;.drag-box&#39;);
+let dragBar = document.querySelectorAll(&#39;.drag-bar&#39;);
+new Ddrag(dragBar[0], dragBox[0], printPosition).init();
+new Ddrag(dragBar[1], dragBox[1]).init();
+</code></pre><p><a href="https://github.com/DarylsJoy/Ddrag" target="_blank" rel="noopener">GitHub</a></p><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JS原生API遍历DOM树的简单实例]]></title>
+      <url>/2017/04/12/js-treewalker.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>使用 JavaScript 的API来遍历DOM树的两种方法总结。<br>以下面的HTML片段为例</p><pre><code class="HTML">&lt;div id=&quot;gf&quot;&gt;
+  &lt;div id=&quot;f1&quot;&gt;
+    &lt;div id=&quot;f1-s1&quot;&gt;&lt;/div&gt;
+    &lt;div id=&quot;f1-s2&quot;&gt;&lt;/div&gt;
+    &lt;div id=&quot;f1-s3&quot;&gt;
+      &lt;div id=&quot;f1-s3-gs1&quot;&gt;&lt;/div&gt;
+      &lt;div id=&quot;f1-s3-gs2&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;f2&quot;&gt;
+    &lt;div id=&quot;f2-s1&quot;&gt;
+      &lt;div id=&quot;f2-s1-gs1&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div id=&quot;f2-s2&quot;&gt;&lt;/div&gt;
+    &lt;div id=&quot;f2-s3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><pre><code class="JavaScript">let gf = document.querySelector(&#39;#gf&#39;);
+</code></pre><h3 id="NodeIterator"><a href="#NodeIterator" class="headerlink" title="NodeIterator"></a>NodeIterator</h3><p>文档： <a href="https://developer.mozilla.org/en-US/docs/Web/API/NodeIterator" target="_blank" rel="noopener">MDN</a></p><p>简单使用如下，遍历返回id</p><pre><code class="JavaScript">let iterator = document.createNodeIterator(gf, NodeFilter.SHOW_ELEMENT, null, false);
+let node = iterator.nextNode();
+while (node !== null) {
+  console.log(node.id);
+  node = iterator.nextNode();
+}
+</code></pre><p>输出结果为</p><pre><code>gf
+f1
+f1-s1
+f1-s2
+f1-s3
+f1-s3-gs1
+f1-s3-gs2
+f2
+f2-s1
+f2-s1-gs1
+f2-s2
+f2-s3
+</code></pre><h3 id="TreeWalker"><a href="#TreeWalker" class="headerlink" title="TreeWalker"></a>TreeWalker</h3><p>文档： <a href="https://developer.mozilla.org/en-US/docs/Web/API/TreeWalker" target="_blank" rel="noopener">MDN</a></p><p>与NodeIterator相比，TreeWalker提供了更多诸如 parentNode（遍历到当前节点的父节点），lastChild （遍历到当前节点的最后一个子节点）可以沿任意方向移动的方法，详见文档。<br>简单使用如下</p><pre><code class="JavaScript">let walker = document.createTreeWalker(gf, NodeFilter.SHOW_ELEMENT, null, false);
+
+console.log(walker.firstChild());
+console.log(walker.nextSibling());
+
+let node = walker.firstChild();
+while (node !== null) {
+  console.log(node.id);
+  node = walker.nextSibling();
+}
+</code></pre><p>结果</p><pre><code class="HTML">&lt;div id=​&quot;f1&quot;&gt;​…​&lt;/div&gt;​
+&lt;div id=​&quot;f2&quot;&gt;​…​&lt;/div&gt;​
+f2-s1
+f2-s2
+f2-s3
+</code></pre><p>这两种类型均为深度优先遍历。</p><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JS中数组的reduce方法]]></title>
+      <url>/2017/04/07/js-array-reduce.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><p>callback 执行数组中每个值的函数，包含四个参数<br>accumulator 上一次调用回调返回的值，或者是提供的初始值（initialValue）<br>currentValue 数组中正在处理的元素<br>currentIndex 数据中正在处理的元素索引，如果提供了<br>initialValue 从0开始；否则从1开始array调用 reduce 的数组<br>initialValue 可选项，其值用于第一次调用 callback 的第一个参数</p><h3 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h3><p>函数累计处理的结果<br>简单使用如下</p><pre><code class="JavaScript">let items = [10, 120, 1000];
+let reducer = function add(sumSoFar, item) { return sumSoFar + item; };
+let total = items.reduce(reducer, 0);
+console.log(total); // 1130
+</code></pre><p>也可以定义初始值为对象</p><pre><code class="JavaScript">let items = [10, 120, 1000];
+
+let reducer = function add(sumSoFar, item) {
+  sumSoFar.sum = sumSoFar.sum + item;
+  return sumSoFar;
+};
+
+let total = items.reduce(reducer, {sum: 0});
+
+console.log(total); // {sum:1130}
+</code></pre><h3 id="多重叠加"><a href="#多重叠加" class="headerlink" title="多重叠加"></a>多重叠加</h3><p>使用reduce方法可以完成多维度的数据叠加。如上例中的初始值{sum: 0}，这仅仅是一个维度的操作，如果涉及到了多个属性的叠加，如{sum: 0,totalInEuros: 0,totalInYen: 0}，则需要相应的逻辑进行处理。<br>在下面的方法中，将reduce函数第一个参数callback封装为一个数组，由数组中的每一个函数单独进行叠加并完成reduce操作。所有的一切通过一个manager函数来管理流程和传递初始参数。<br>manager函数的实现，需要reducers对象作为参数，并返回一个callback类型的函数，作为reduce的第一个参数。在该函数内部，则执行多维的叠加工作（Object.keys（））。<br>通过这种分治的思想，可以完成目标对象多个属性的同时叠加，完整代码如下：</p><pre><code class="JavaScript">let reducers = {
+  totalInEuros: function (state, item) {
+    return state.euros += item.price * 0.897424392;
+  },
+  totalInYen: function (state, item) {
+    return state.yens += item.price * 113.852;
+  }
+};
+
+// manager函数
+let manageReducers = function (reducers) {
+  return function (state, item) {
+    return Object.keys(reducers).reduce(
+        function (nextState, key) {
+          reducers[key](state, item);
+          return state;
+        },
+        {}
+    );
+  }
+};
+
+let bigTotalPriceReducer = manageReducers(reducers);
+let initialState = {euros: 0, yens: 0};
+let items = [{price: 10}, {price: 120}, {price: 1000}];
+let totals = items.reduce(bigTotalPriceReducer, initialState);
+
+console.log(totals);
+</code></pre><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[随机获取名言，可分享到微博]]></title>
+      <url>/2017/04/04/bigsaying.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>demo : <a href="http://demo.daryldong.com/bigsaying/" target="_blank" rel="noopener">点我</a><br>用Vue实现的简单练手，为了简（sheng）洁（shi），使用了Bootstrap和jQuery来写样式和发起Ajax请求，图标使用Font Awesome。API使用<a href="http://avatardata.cn/" target="_blank" rel="noopener">阿凡达数据</a></p><pre><code class="HTML">&lt;div id=&quot;app&quot; class=&quot;col-sm-9 col-md-6&quot;&gt;
+  &lt;div class=&quot;thumbnail&quot;&gt;
+    &lt;div class=&quot;caption&quot;&gt;
+      &lt;blockquote&gt;
+        &lt;div id=&quot;message&quot;&gt;
+          &lt;p&gt;{{ message.famous_saying }}&lt;/p&gt;
+          &lt;div class=&quot;pull-right&quot;&gt;
+            ——{{ message.famous_name }}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/blockquote&gt;
+      &lt;p class=&quot;pull-right&quot;&gt;
+        &lt;button v-on:click=&quot;getWord&quot; class=&quot;btn btn-default&quot;&gt;&lt;i class=&quot;fa fa-refresh&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;button v-on:click=&quot;share(&#39;weibo&#39;)&quot; class=&quot;btn btn-danger&quot;&gt;&lt;i class=&quot;fa fa-weibo&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+      &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p>请求部分：</p><pre><code class="JavaScript">getWord: function () {
+  let self = this;
+  $(&quot;#message&quot;).fadeOut(50, function () {
+    $.ajax({
+      url: &quot;http://demo.daryldong.com/bigsaying/getting.php&quot;,
+      type: &quot;POST&quot;,
+      dataType: &#39;json&#39;,
+      success: function (data) {
+        self.message = data.result;
+        $(&quot;#message&quot;).fadeIn();
+      }
+    });
+  });
+}
+</code></pre><p><a href="https://github.com/DarylsJoy/bigsaying/" target="_blank" rel="noopener">GitHub</a></p><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JS的类数组对象HTMLCollection,NodeList,arguments]]></title>
+      <url>/2017/04/03/js-collections.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>既然叫类数组，就肯定不是数组了。<br>简单的讲类数组，拥有length的属性，但不是数组，没有forEach、map、slice等方法。</p><h3 id="常见类数组"><a href="#常见类数组" class="headerlink" title="常见类数组"></a>常见类数组</h3><h4 id="函数的arguments"><a href="#函数的arguments" class="headerlink" title="函数的arguments"></a>函数的arguments</h4><p>arguments:代表传给函数的参数的个数（没有参数的时候就是undefined）。<br>它是个对象(不是数组)，有length属性，可以通过arguments[n]来访问，如果我们要传递给函数的参数转化成熟组的时候，可以很方便运用：[].slice.call(arguments)来使arguments转换成一个数组对象。<br>HTMLCollection对象</p><p>HTMLCollection是一个接口，表示HTML元素的集合，提供可以遍历的列表的方法和属性。拥有length，item，nameItem属性。<br>返回HTMLCollection集合的有：Document (images, applets, links, forms, anchors)，form (elements)，map (areas)，select (options)，table (rows, tBodies)，tableSection (rows)，row (cells)</p><pre><code class="JavaScript">var image = document.images; // 所有img元素
+var links = document.links; // 所有带href属性的a元素和area元素
+var anchors = document.anchors; // 所有带name属性的a元素
+var forms = document.forms; // 所有form元素
+var script = document.scripts; // 所有script元素
+var applets = document.applets; // 所有applet元素
+var embeds = document.embeds; // 所有embed元素
+var plugins = document.plugins; // document.与embeds相同
+var children = document.getElementById(&quot;table&quot;).children;
+var tBodies = document.getElementById(&quot;table&quot;).tBodies;
+var rows = document.getElementById(&quot;table&quot;).rows;
+var cells = document.getElementById(&quot;row&quot;).cells;
+var areas = document.getElementById(&quot;Map&quot;).areas;
+
+var docall = document.all; // HTMLAllCollection，与HTMLCollection类似
+var elems = document.getElementById(&quot;form&quot;).elements; // HTMLFormControlsCollection extends HTMLCollection
+var options = document.getElementById(&quot;select&quot;).options; // HTMLOptionsCollection extends HTMLCollection
+var elemByClassName = document.getElementsByClassName(&quot;box&quot;);
+var elemByTagName = document.getElementsByTagName(&quot;div&quot;);
+var elemByTagNameNS = document.getElementsByTagNameNS(&quot;*&quot;, &quot;a&quot;);
+
+
+console.dir(&quot;document.images：&quot; + Object.prototype.toString.call(image));
+console.dir(&quot;document.links：&quot; + Object.prototype.toString.call(links));
+console.dir(&quot;document.anchors：&quot; + Object.prototype.toString.call(anchors));
+console.dir(&quot;document.forms：&quot; + Object.prototype.toString.call(forms));
+console.dir(&quot;document.scripts：&quot; + Object.prototype.toString.call(script));
+console.dir(&quot;document.applets：&quot; + Object.prototype.toString.call(applets));
+console.dir(&quot;document.embeds：&quot; + Object.prototype.toString.call(embeds));
+console.dir(&quot;document.plugins：&quot; + Object.prototype.toString.call(plugins));
+console.dir(&quot;document.getElementById(&#39;table&#39;).children：&quot; + Object.prototype.toString.call(children));
+console.dir(&quot;document.getElementById(&#39;table&#39;).tBodies：&quot; + Object.prototype.toString.call(tBodies));
+console.dir(&quot;document.getElementById(&#39;table&#39;).rows：&quot; + Object.prototype.toString.call(rows));
+console.dir(&quot;document.getElementById(&#39;row&#39;).cells：&quot; + Object.prototype.toString.call(cells));
+console.dir(&quot;document.getElementById(&#39;Map&#39;).areas：&quot; + Object.prototype.toString.call(areas));
+console.dir(&quot;document.all：&quot; + Object.prototype.toString.call(docall));
+console.dir(&quot;document.getElementById(&#39;form&#39;).elements：&quot; + Object.prototype.toString.call(elems));
+console.dir(&quot;document.getElementById(&#39;select&#39;).options：&quot; + Object.prototype.toString.call(options));
+console.dir(&quot;document.getElementsByClassName(&#39;box&#39;)：&quot; + Object.prototype.toString.call(elemByClassName));
+console.dir(&quot;document.getElementsByTagName(&#39;div&#39;)：&quot; + Object.prototype.toString.call(elemByTagName));
+console.dir(&quot;document.getElementsByTagNameNS(&#39;*&#39;, &#39;a&#39;)：&quot; + Object.prototype.toString.call(elemByTagNameNS));
+</code></pre><p>输出为</p><pre><code class="JavaScript">document.images：[object HTMLCollection]
+document.links：[object HTMLCollection]
+document.anchors：[object HTMLCollection]
+document.forms：[object HTMLCollection]
+document.scripts：[object HTMLCollection]
+document.applets：[object HTMLCollection]
+document.embeds：[object HTMLCollection]
+document.plugins：[object HTMLCollection]
+document.getElementById(&#39;table&#39;).children：[object HTMLCollection]
+document.getElementById(&#39;table&#39;).tBodies：[object HTMLCollection]
+document.getElementById(&#39;table&#39;).rows：[object HTMLCollection]
+document.getElementById(&#39;row&#39;).cells：[object HTMLCollection]
+document.getElementById(&#39;Map&#39;).areas：[object HTMLCollection]
+document.all：[object HTMLAllCollection]
+document.getElementById(&#39;form&#39;).elements：[object HTMLFormControlsCollection]
+document.getElementById(&#39;select&#39;).options：[object HTMLOptionsCollection]
+document.getElementsByClassName(&#39;box&#39;)：[object HTMLCollection]
+document.getElementsByTagName(&#39;div&#39;)：[object HTMLCollection]
+document.getElementsByTagNameNS(&#39;*&#39;, &#39;a&#39;)：[object HTMLCollection]
+</code></pre><h4 id="NodeList对象"><a href="#NodeList对象" class="headerlink" title="NodeList对象"></a>NodeList对象</h4><p>NodeList代表了一个有顺序的的节点列表，拥有length，item属性。<br>返回NodeList集合的有：document.getElementsByName，document.querySelectorAll，document.getElementById(“table”).childNodes，document.styleSheets，同样的我们在控制台输出：</p><pre><code class="JavaScript">var elemByName = document.getElementsByName(&quot;testbox&quot;);
+var elemByQuery = document.querySelectorAll(&quot;a&quot;);
+var elemByChildNodes = document.getElementById(&quot;table&quot;).childNodes;
+var stylesheet = document.styleSheets; // StyleSheetList，与NodeList类似
+
+console.dir(&quot;document.getElementsByName(&#39;testbox&#39;)：&quot; + Object.prototype.toString.call(elemByName));
+console.dir(&quot;document.querySelectorAll(&#39;a&#39;)：&quot; + Object.prototype.toString.call(elemByQuery));
+console.dir(&quot;document.getElementById(&#39;table&#39;).childNodes：&quot; + Object.prototype.toString.call(elemByChildNodes));
+console.dir(&quot;document.styleSheets：&quot; + Object.prototype.toString.call(stylesheet));
+</code></pre><h3 id="类数组转化成数组"><a href="#类数组转化成数组" class="headerlink" title="类数组转化成数组"></a>类数组转化成数组</h3><p>arguments</p><p>arguements的数组化，只需要运用[].slice.call(),方法便可以将传递给函数的参数数组化：</p><pre><code class="JavaScript">function argToArr(){
+    var args=[].slice.call(arguments);
+    console.dir(args);  // [10,20] 参数被转化成数组
+}
+argToArr(1, 2, 3, 4, 5);
+</code></pre><p>HTMLCollection和NodeList</p><p>对于这两个类数组对象的元素集合，如果使用[].slice.call()的方式，IE8及以下的浏览器竟然会报错，报错的内容是：”Array.prototype.slice: ‘this’ 不是 JavaScript 对象”。</p><blockquote><p>较新的浏览器可以使用[].slice.call()的方式。<br>很明显的我们发现低版本的IE浏览器的HTMLCollection和Nodelist并不是Object的子类。所以为了让类数组转化成纯数组，我们需要进行一定的处理，借鉴几个类库的写法，我们可以：<br>jQuery的早期makeArray的做法：</p></blockquote><pre><code class="JavaScript"> var div = document.getElementsByTagName(&quot;div&quot;);
+function makeArray(array) {
+  var ret = [];
+  if (array != null) {
+    var i = array.length;
+    // The window, strings (and functions) also have &#39;length&#39;
+    if (i == null || typeof array === &quot;string&quot; || array.setInterval) {
+      ret[0] = array;
+    } else {
+      while (i) {
+        ret[--i] = array[i];
+      }
+    }
+  }
+  return ret;
+}
+var arr = makeArray(div);
+console.dir(arr);
+</code></pre><p>Prototype的makeArray的做法：</p><pre><code class="JavaScript">//这部分主流高版本的浏览器就会使用这个函数
+var makeArray = function (array, results) {
+  array = Array.prototype.slice.call(array, 0);
+  if (results) {
+    results.push.apply(results, array);
+    return results;
+  }
+  return array;
+};
+
+//对于低版本的浏览器进行探测，IE8及以下浏览器就会使用下面重载的makeArray
+try {
+  Array.prototype.slice.call(document.documentElement.childNodes, 0);
+} catch (e) {
+  makeArray = function (array, results) {
+    var ret = results || [];
+    if (toString.call(array) === &quot;[object Array]&quot;) {
+      Array.prototype.push.apply(ret, array);
+    } else {
+      if (typeof array.length === &quot;number&quot;) {
+        for (var i = 0, l = array.length; i &lt; l; i++) {
+          ret.push(array[i]);
+        }
+      } else {
+        for (var i = 0; array[i]; i++) {
+          ret.push(array[i]);
+        }
+      }
+    }
+    return ret;
+  };
+}
+</code></pre><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[移动端点击事件的延迟你感觉到了吗？]]></title>
+      <url>/2017/04/02/mobile-fast-click.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>许多移动端的浏览器对点击事件都有300ms的延迟，那么问题来了，这延迟是哪来的？<br>其实拿出手机点一点就能发现，在浏览器中快速双击两下起到的作用往往是页面缩放，也就是说，延迟的这段时间其实是浏览器在判断用户的操作到底是点击还是缩放。<br>可是现在大家对于速度的要求越来越高，甚至“加载中”这类的提示出现太久也会有人点下返回键。作为奋战在用户与网站交互第一线的前端工程师，这个延迟也就是要解决的了。</p><h3 id="粗暴型：禁用缩放"><a href="#粗暴型：禁用缩放" class="headerlink" title="粗暴型：禁用缩放"></a>粗暴型：禁用缩放</h3><p>既然原因是浏览器判断用户是否想缩放，那直接把缩放禁用岂不是一劳永逸？</p><pre><code class="HTML">&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, user-scalable=no&quot;&gt;
+</code></pre><p>可是如果用户想要进行缩放的操作呢？<br>缩放的操作呢？<br>呢？<br>所以这种办法轻易不要使用…除非确定了用户一定不会进行缩放操作，而且你又刚好想偷个懒的时候可以尝试。</p><blockquote><p>在 chrome 32+ 中，如果设置了 viewport 的宽度小于或等于物理设备的宽度，也会达到禁用缩放的效果。</p></blockquote><h3 id="不见得兼容型：指针事件"><a href="#不见得兼容型：指针事件" class="headerlink" title="不见得兼容型：指针事件"></a>不见得兼容型：指针事件</h3><p><a href="https://technet.microsoft.com/zh-cn/library/hh772044" target="_blank" rel="noopener">Microsoft TechNet</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/touch-action" target="_blank" rel="noopener">MDN</a></p><table><thead><tr><th style="text-align:center">value</th><th style="text-align:center">-</th></tr></thead><tbody><tr><td style="text-align:center">auto</td><td style="text-align:center">默认值，允许浏览器给元素添加touch行为</td></tr><tr><td style="text-align:center">none</td><td style="text-align:center">不允许默认的touch行为</td></tr><tr><td style="text-align:center">pan-x</td><td style="text-align:center">允许水平轴触摸驱动的平移</td></tr><tr><td style="text-align:center">pan-y</td><td style="text-align:center">允许垂直轴触摸驱动的平移</td></tr><tr><td style="text-align:center">pinch-zoom</td><td style="text-align:center">允许拖拽缩放</td></tr><tr><td style="text-align:center">manipulation</td><td style="text-align:center">允许触摸驱动的平移和拖拽缩放</td></tr><tr><td style="text-align:center">double-tap-zoom</td><td style="text-align:center">允许整个页面双击缩放指定元素</td></tr><tr><td style="text-align:center">inherit</td><td style="text-align:center">继承父元素的值</td></tr></tbody></table><pre><code class="CSS">a, button, .something {
+    -ms-touch-action: manipulation; /* IE10  */
+    touch-action: manipulation;     /* IE11+ */
+}
+</code></pre><p>对应的元素在被点击之后，浏览器不会启动缩放操作，也就避免了这个300ms延迟</p><h3 id="伟大的库型：FastClick"><a href="#伟大的库型：FastClick" class="headerlink" title="伟大的库型：FastClick"></a>伟大的库型：FastClick</h3><p>GitHub在这：<a href="https://github.com/ftlabs/fastclick" target="_blank" rel="noopener">FastClick</a><br>FastClick是FT Labs专门为解决移动端浏览器 300 毫秒点击延迟问题所开发的一个轻量级的库。简而言之，FastClick 在检测到 touchend 事件的时候，会通过 DOM 自定义事件立即触发一个模拟 click 事件，并把浏览器在 300 毫秒之后真正触发的click事件阻止掉。<br>FastClick 的使用方法非常简单，在 load 事件之后，在body上调用FastClick.attach()即可。</p><pre><code class="JavaScript">if (&#39;addEventListener&#39; in document) {
+    document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+        FastClick.attach(document.body);
+    }, false);
+}
+</code></pre><p>attach方法虽可在更具体的元素上调用，直接绑定到body上可以确保整个应用都能受益。<br>当 FastClick 检测到当前页面使用meta设置了user-scalable=no或者 touch-action 属性的解决方案时，会静默退出。可以说，这是一个很棒的解决方案。<br>他唯一的缺点可能就是该脚本的文件尺寸 (尽管它只有10kb)。如果你连这10kb都接受不了的话，那么 jQuery Mobile 和 Zepto.js 都有 tap 事件来解决这个问题（如果你在使用他们的话）。<br>除了FastClick还有 <a href="https://github.com/filamentgroup/tappy/" target="_blank" rel="noopener">Tappy</a> 也可以解决这个问题，不过说来说去，不论哪种方案，适合的才是最好的。</p><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript中的this]]></title>
+      <url>/2017/03/25/js-this.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>在全局作用域直接调用console.log(this)，会出现什么？<br>当然是Window对象…<br>这段代码中，bar()为什么打印出了Window呢？</p><pre><code class="JavaScript">var obj = {
+  foo: function(){
+    console.log(this)
+  }
+}
+
+var bar = obj.foo
+obj.foo() // obj
+bar() // Window
+</code></pre><h3 id="函数的调用"><a href="#函数的调用" class="headerlink" title="函数的调用"></a>函数的调用</h3><p>ES5 中的三种函数调用形式（ES6中的箭头函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象。）</p><pre><code class="JavaScript">func(p1, p2) 
+obj.child.method(p1, p2)
+func.call(context, p1, p2)
+</code></pre><p>虽然第一种看着最顺眼，但其实明白了第三种，也就明白了this。<br>前两种均可转换为 call 形式：</p><pre><code class="JavaScript">func(p1, p2) 等价于
+func.call(undefined, p1, p2)
+
+obj.child.method(p1, p2) 等价于
+obj.child.method.call(obj.child, p1, p2)
+</code></pre><p>即抽象出一种形式：</p><pre><code class="JavaScript">func.call(context, p1, p2)
+</code></pre><p><strong>那么，this，就是 context。</strong><br>那为啥下面这段代码的结果是Window呢？不是undefined吗？</p><pre><code class="JavaScript">function func(){
+  console.log(this)
+}
+
+func()
+</code></pre><p>这是因为在非严格模式下，使用apply()或call()方法时，null或undefined值会被转换为全局对象。</p><blockquote><p>在严格模式下，this的值始终为指定的值。</p></blockquote><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[canvas图形的平移，缩放，旋转]]></title>
+      <url>/2017/03/21/canvas-transtion.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><h3 id="移动坐标-translate-dx-dy"><a href="#移动坐标-translate-dx-dy" class="headerlink" title="移动坐标  translate(dx,dy)"></a>移动坐标 translate(dx,dy)</h3><p>dx,dy分别表示坐标原点沿水平和垂直两个方向的偏移量。</p><pre><code class="JavaScript">function draw() {
+  var ctx = document.getElementById(&#39;myCanvas&#39;).getContext(&#39;2d&#39;);
+  ctx.translate(80, 80);
+  for (var i = 0; i &lt; 10; i++) {
+    ctx.save();
+    ctx.translate(60 * i, 0);
+    drawTop(ctx, &#39;rgb(&#39; + (30 * i) + &#39;,&#39; + (255 - 30 * i) + &#39;,255)&#39;);
+    drawGrip(ctx);
+    ctx.restore();
+  }
+}
+</code></pre><h3 id="旋转坐标-rotate-angle"><a href="#旋转坐标-rotate-angle" class="headerlink" title="旋转坐标  rotate(angle)"></a>旋转坐标 rotate(angle)</h3><p>旋转角度angle，旋转角度以顺时针方向为正方向，以弧度为单位，旋转中心为canvas的原点。</p><pre><code class="JavaScript">function draw() {
+  var c = document.getElementById(&#39;myCanvas&#39;);
+  var ctx = c.getContext(&#39;2d&#39;);
+  ctx.translate(150, 150);
+  for (var i = 0; i &lt; 8; i++) {
+    ctx.save();
+    // 旋转角度，以弧度计。如转换为弧度，使用 degrees*Math.PI/180 进行计算。
+    ctx.rotate(Math.PI * (2 / 4 + i / 4));
+    ctx.translate(0, -100);
+    drawTop(ctx, &#39;rgb(&#39; + (30 * i) + &#39;,&#39; + (255 - 30 * i) + &#39;,255)&#39;);
+    drawGrip(ctx);
+    ctx.restore();
+  }
+}
+</code></pre><h3 id="缩放图形-scale-x-y"><a href="#缩放图形-scale-x-y" class="headerlink" title="缩放图形  scale(x,y)"></a>缩放图形 scale(x,y)</h3><p>其中x为x轴的缩放，y为y轴的缩放，如果要缩小，值为小于1的数值，如果要放大，值为大于1的数值。1=100%, 0.5=50%, 2=200%…</p><pre><code class="JavaScript">function draw() {
+  var c = document.getElementById(&#39;myCanvas&#39;);
+  var ctx = c.getContext(&#39;2d&#39;);
+  ctx.translate(180, 20);
+  for (var i = 0; i &lt; 80; i++) {
+    ctx.save();
+    ctx.translate(30, 30);
+    // 1=100%, 0.5=50%, 2=200% ...
+    ctx.scale(0.95, 0.95);
+    ctx.rotate(Math.PI / 12);
+    ctx.beginPath();
+    ctx.fillStyle = &#39;red&#39;;
+    ctx.globalAlpha = &#39;0.4&#39;;
+    ctx.arc(0, 0, 50, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.fill();
+  }
+}
+</code></pre><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> canvas </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[React实现TodoList]]></title>
+      <url>/2017/03/19/react-todolist.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>之前用Vue实现了TodoList，双向数据绑定带来了许多便利，这次用React来实现是借助它的state，逻辑部分大同小异。<br><a href="http://demo.daryldong.com/reacttodolist/" target="_blank" rel="noopener">React版</a><br><a href="http://demo.daryldong.com/vuetodolist/" target="_blank" rel="noopener">Vue版</a></p><p>使用localStorage存储</p><pre><code class="JavaScript">export default {
+  fetch() {
+    return JSON.parse(window.localStorage.getItem(STORAGE_KEY) || &#39;[]&#39;)
+  },
+  save(items) {
+    window.localStorage.setItem(STORAGE_KEY,JSON.stringify(items))
+  }
+}
+</code></pre><p>将TodoList分为三个组件，分别实现添加新事项、事项浏览、清空三项功能。<br>父组件初始化数据</p><pre><code class="JavaScript">// 初始化数据，todolist的数据由state来控制
+getInitialState() {
+  return {
+    todolist: Store.fetch() == null ? []: Store.fetch()
+  };
+}
+</code></pre><p>新增事项</p><pre><code class="JavaScript">handleAdd(e) {
+  e.preventDefault();
+  var inputDom = this.refs.inputnew.value;
+  var rows = this.props.todo;
+  if (inputDom !== &#39;&#39;) {
+    // 更新数据
+    rows.push({
+      label: inputDom,
+      isFinished: false
+    });
+    this.props.onAdd(rows);
+  }
+  this.refs.inputnew.value = &#39;&#39;;
+}
+</code></pre><p>事项展示部分</p><pre><code class="JavaScript">&lt;ul id=&quot;list&quot;&gt;
+  {
+    this.props.todo.map(function (item, i) {
+      return (
+        &lt;li onClick={this.handleFin.bind(this, i)} className={this.props.todo[i].isFinished ? &quot;finished&quot; : &quot;&quot;}&gt;
+          &lt;span className=&quot;things&quot;&gt;{item.label}&lt;/span&gt;
+          &lt;span className=&quot;delete&quot; onClick={this.handleDel} data-key={i}&gt;×&lt;/span&gt;
+        &lt;/li&gt;
+      );
+    }.bind(this))
+  }
+&lt;/ul&gt;
+</code></pre><pre><code class="JavaScript">// 删除一条
+handleDel(e) {
+  var delIndex = e.target.getAttribute(&#39;data-key&#39;);
+  this.props.todo.splice(delIndex, 1);
+  this.props.onChange(this.props.todo);
+},
+// 是否已完成
+handleFin(i, e) {
+  if (e.target.className === &#39;things&#39;) {
+    this.props.todo[i].isFinished = !this.props.todo[i].isFinished;
+    this.props.onChange(this.props.todo);
+  }
+}
+</code></pre><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+            <tag> React </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Set：我可不是数组]]></title>
+      <url>/2017/03/15/js-set-array-unique.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>首先，先来看一个老问题，数组去重。<br>传统解决方案是利用循环来进行处理，如下。<br>先对浏览器Array对象进行支持indexOf和forEach的polyfill</p><pre><code class="JavaScript">Array.prototype.indexOf = Array.prototype.indexOf || function (item) {
+  for (var i = 0, j = this.length; i &lt; j; i++) {
+    if (this[i] === item) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+Array.prototype.forEach = Array.prototype.forEach || function (callback, thisArg) {
+  if (!callback || typeof callback !== &#39;function&#39;) {
+    return;
+  }
+  for (var i = 0, j = this.length; i &lt; j; i++) {
+    callback.call(thisArg, this[i], i, this);
+  }
+};
+</code></pre><p>这里只举出两个方法<br>方法一，遍历数组，建立新数组，利用indexOf判断是否存在于新数组中，不存在则push到新数组，最后返回新数组。</p><pre><code class="JavaScript">function removeDuplicates1(ar) {
+  var ret = [];
+  for (var i = 0, j = ar.length; i &lt; j; i++) {
+    if (ret.indexOf(ar[i]) === -1) {
+      ret.push(ar[i]);
+    }
+  }
+  return ret;
+}
+</code></pre><p>方法二，遍历数组，利用indexOf判断元素的出现次数。</p><pre><code class="JavaScript">function removeDuplicates2(ar) {
+  var ret = [];
+  ar.forEach(function(e, i, ar) {
+    if (ar.indexOf(e) === i) {
+      ret.push(e);
+    }
+  });
+  return ret;
+}
+</code></pre><p>接下来隆重请出我们的Set，为什么前面要引入数组去重呢？因为用Set去重简直是太轻松了，因为他不仅与数组相似，而且成员的值必须唯一，不可重复，这个特点是不是很吸引人？<br>使用new来新创建一个set，基本语法如下：</p><pre><code class="JavaScript">const s = new Set();
+
+[2, 3, 5, 4, 5, 2, 2].forEach(x =&gt; s.add(x));
+
+for (let i of s) {
+  console.log(i);
+}
+// 2 3 5 4
+</code></pre><p>所以我们能找到一种简单的去重方法：</p><pre><code class="JavaScript">function dedupe1(ar) {
+  return Array.from(new Set(ar));
+}
+dedupe1([1, 1, 2, 2, 3]);   // [1, 2, 3]
+</code></pre><p>或利用扩展运算符（…）</p><pre><code class="JavaScript">function dedupe2(ar) {
+  return [...new Set(ar)];
+}
+dedupe2([1, 1, 2, 2, 3]);   // [1, 2, 3]
+</code></pre><p>Set是不是很棒棒？</p><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript中的事件代理]]></title>
+      <url>/2017/03/14/js-delegate.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>在项目中有时需要给页面中的按钮，文字，或图片添加事件监听器，当用户与这些元素交互时触发某些操作。<br>以一个简单的列表为例，希望在用户点击列表中某一项时触发一个动作。</p><pre><code class="HTML">&lt;ul id=&quot;todo-app&quot;&gt;
+  &lt;li class=&quot;item&quot;&gt;1&lt;/li&gt;
+  &lt;li class=&quot;item&quot;&gt;2&lt;/li&gt;
+  &lt;li class=&quot;item&quot;&gt;3&lt;/li&gt;
+  &lt;li class=&quot;item&quot;&gt;4&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre><p>可能会像下面的代码一样给元素添加事件监听器：</p><pre><code class="JavaScript">document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+  let app = document.getElementById(&#39;todo-app&#39;);
+  let items = app.getElementsByClassName(&#39;item&#39;);
+  // 给每个列表项添加事件监听器
+  for (let item of items) {
+    item.addEventListener(&#39;click&#39;, function() {
+      alert(&#39;you clicked on item: &#39; + item.innerHTML);
+    });
+  }
+});
+</code></pre><p>当列表只有 4 项时没有问题，但如果新增了 10,000 个事项呢？那时函数会创建 10,000 个事件监听器，然后把它们都添加到 DOM 上。这样 效率 非常低。<br>如果应用有上百个事件监听器，更高效的解决方案是给最外层的容器添加 一个 事件监听器，当用户真正点击的时候再去获取实际被点击的代办事项。这被称为 事件代理 ，这比给每个代办事项都单独添加事件监听器更高效。<br>下面是事件代理的代码：</p><pre><code class="JavaScript">document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+  let app = document.getElementById(&#39;todo-app&#39;);
+  // 给容器添加事件监听器
+  app.addEventListener(&#39;click&#39;, function(e) {
+    if (e.target &amp;&amp; e.target.nodeName === &#39;LI&#39;) {
+      let item = e.target;
+      alert(&#39;you clicked on item: &#39; + item.innerHTML);
+    }
+  });
+});
+</code></pre><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[一个愚蠢的五子棋]]></title>
+      <url>/2017/03/11/canvas-stupid-gobang.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>一个用canvas做的AI很傻的五子棋游戏，和他玩玩看？ <a href="http://demo.daryldong.com/wuziqi/" target="_blank" rel="noopener">实例</a><br>绘制部分：</p><pre><code class="JavaScript">// 绘制棋盘
+function drawChessBoard() {
+  _canvasBufferContext.strokeStyle = &#39;#aaaaaa&#39;;
+  for (var i = 0; i &lt;= 16; i ++) {
+    // 横线
+    _canvasBufferContext.moveTo(15 + i * 30, 15);
+    _canvasBufferContext.lineTo(15 + i * 30, 495);
+    _canvasBufferContext.stroke();
+    // 纵线
+    _canvasBufferContext.moveTo(15, 15 + i * 30);
+    _canvasBufferContext.lineTo(495, 15 + i * 30);
+    _canvasBufferContext.stroke();
+  }
+  context.drawImage(_canvasBuffer, 0, 0, 510, 510);
+}
+
+// 绘制棋子
+function drawChess(i, j, color) {
+  _canvasBufferContext.beginPath();
+  _canvasBufferContext.arc(15 + i * 30, 15 + j * 30, 13, 0, 2 * Math.PI);
+  _canvasBufferContext.closePath();
+  var gradient = _canvasBufferContext.createRadialGradient(15 + i * 30 + 2, 15 + j * 30 - 2, 13, 15 + i * 30 + 2, 15 + j * 30 - 2, 0);
+  // color为true代表白子，false代表黑子
+  if (color) {
+    gradient.addColorStop(0, &#39;#d1d1d1&#39;);
+    gradient.addColorStop(1, &#39;#f9f9f9&#39;);
+  } else {
+    gradient.addColorStop(0, &#39;#0a0a0a&#39;);
+    gradient.addColorStop(1, &#39;#666666&#39;);
+  }
+  _canvasBufferContext.fillStyle = gradient;
+  _canvasBufferContext.fill();
+  context.drawImage(_canvasBuffer, 0, 0, 510, 510);
+}
+</code></pre><p>怎么样才能赢呢？保存在数组中</p><pre><code class="JavaScript">function howToWin() {
+  for (var i = 0; i &lt; 17; i ++) {
+    wins[i] = [];
+    for (var j = 0; j &lt; 17; j ++) {
+      wins[i][j] = [];
+    }
+  }
+  // 横向赢法索引
+  for (var l1 = 0; l1 &lt; 17; l1 ++) {
+    for (var m1 = 0; m1 &lt; 13; m1 ++) {
+      for (var n1 = 0; n1 &lt; 5; n1 ++) {
+        wins[l1][m1 + n1][count] = true;
+      }
+      count++;
+    }
+  }
+  // 纵向赢法索引
+  for (var l2 = 0; l2 &lt; 17; l2 ++) {
+    for (var m2 = 0; m2 &lt; 13; m2 ++) {
+      for (var n2 = 0; n2 &lt; 5; n2 ++) {
+        wins[m2 + n2][l2][count] = true;
+      }
+      count++;
+    }
+  }
+  // 斜向赢法索引
+  for (var l3 = 0; l3 &lt; 13; l3 ++) {
+    for (var m3 = 0; m3 &lt; 13; m3 ++) {
+      for (var n3 = 0; n3 &lt; 5; n3 ++) {
+        wins[l3 + n3][m3 + n3][count] = true;
+      }
+      count++;
+    }
+  }
+  // 反斜向赢法索引
+  for (var l4 = 0; l4 &lt; 13; l4 ++) {
+    for (var m4 = 16; m4 &gt; 3; m4 --) {
+      for (var n4 = 0; n4 &lt; 5; n4 ++) {
+        wins[l4 + n4][m4 - n4][count] = true;
+      }
+      count++;
+    }
+  }
+
+  for (var x = 0; x &lt; count; x ++) {
+    myWin[x] = 0;
+    computerWin[x] = 0;
+  }
+}
+</code></pre><p>为每种落子计算权重，AI选择权重最大的方式下棋<br>部分代码：</p><pre><code class="JavaScript">if (wins[m][n][k]) {
+  if (myWin[k] == 1) {
+    myScore[m][n] += 200;
+  } else if (myWin[k] == 2) {
+    if (computerWin[k] != 0) {
+      //死二
+      myScore[m][n] += 290;
+    } else {
+      //活二
+      myScore[m][n] += 400;
+    }
+  } else if (myWin[k] == 3) {
+    if (computerWin[k] != 0) {
+      //死三
+      myScore[m][n] += 2000;
+    } else {
+      //活三
+      myScore[m][n] += 4000;
+    }
+  } else if (myWin[k] == 4) {
+    myScore[m][n] += 10000;
+  }
+  if (computerWin[k] == 1) {
+    computerScore[m][n] += 220;
+  } else if (computerWin[k] == 2) {
+    if (myWin[k] != 0) {
+      //死二
+      computerScore[m][n] += 300;
+    } else {
+      //活二
+      computerScore[m][n] += 420;
+    }
+  } else if (computerWin[k] == 3) {
+    if (myWin[k] != 0) {
+      //死三
+      computerScore[m][n] += 2100;
+    } else {
+      //活三
+      computerScore[m][n] += 4100;
+    }
+  } else if (computerWin[k] == 4) {
+    computerScore[m][n] += 20000;
+  }
+}
+</code></pre><p>这部分也许就是他这么傻的原因吧…</p><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> canvas </tag>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript 2048]]></title>
+      <url>/2017/03/09/js-2048.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>利用jQuery开发的一个小游戏，采用数组存放 <a href="http://demo.daryldong.com/2048/" target="_blank" rel="noopener">预览</a><br>初始化：</p><pre><code class="JavaScript">// 初始化
+function init() {
+  for (var i = 0; i &lt; 4; i ++) {
+    for (var j = 0; j &lt; 4; j ++) {
+      var gridCell = $(&#39;#grid-cell-&#39; + i + &#39;-&#39; + j);
+      gridCell.css(&#39;top&#39;, getPosTop(i, j));
+      gridCell.css(&#39;left&#39;, getPosLeft(i, j));
+    }
+  }
+
+  for (var i = 0; i &lt; 4; i ++) {
+    board[i] = [];
+    hasConflicted[i] = [];
+    for (var j = 0; j &lt; 4; j ++) {
+      board[i][j] = 0;
+      hasConflicted[i][j] = false;
+    }
+  }
+
+  updateBoardView();
+
+  score = 0;
+  updateScore(score);
+}
+</code></pre><p>操作后生成新数字：</p><pre><code class="JavaScript">// 随机生成数字
+function generateOneNumber() {
+  if (noSpace(board)) {
+    return false;
+  }
+  // 取得可选空位置
+  var emptyBoard = [];
+  for (var i = 0; i &lt; 4; i ++) {
+    for (var j = 0; j &lt; 4; j ++) {
+      if (board[i][j] == 0) {
+        emptyBoard.push({ri: i, rj: j});
+      }
+    }
+  }
+  // 随机位置
+  var randIndex = Math.floor((Math.random() * emptyBoard.length));
+  var randx = emptyBoard[randIndex].ri;
+  var randy = emptyBoard[randIndex].rj;
+  // 随机数字
+  var randNumber = Math.random() &lt; 0.5 ? 2 : 4;
+  // 随机位置显示随机数字
+  board[randx][randy] = randNumber;
+  showNumberWithAnimation(randx, randy, randNumber);
+  return true;
+}
+</code></pre><p>判断是否可水平移动：</p><pre><code class="JavaScript">// row行由col1到col2路径上是否有障碍
+function noBlockHorizontal(row, col1, col2, board) {
+  for (var i = col1 + 1; i &lt; col2; i ++) {
+    if (board[row][i] != 0) {
+      return false;
+    }
+  }
+  return true;
+}
+</code></pre><p>左移函数</p><pre><code class="JavaScript">function moveLeft() {
+  if (canMoveLeft(board)) {
+    for (var i = 0; i &lt; 4; i ++) {
+      for (var j = 1; j &lt; 4; j ++) {
+        if (board[i][j] != 0) {
+          for (var k = 0; k &lt; j; k++) {
+            if (board[i][k] == 0 &amp;&amp; noBlockHorizontal(i, k, j, board)) {
+              // move
+              // i,j -&gt; i,k
+              showMoveAnimation(i, j, i, k);
+              board[i][k] = board[i][j];
+              board[i][j] = 0;
+              continue;
+            } else if (board[i][k] == board[i][j] &amp;&amp; noBlockHorizontal(i, k, j, board) &amp;&amp; !hasConflicted[i][k]) {
+              // 判断加分
+              score += board[i][k];
+              updateScore(score);
+
+              showMoveAnimation(i, j, i, k);
+              board[i][k] += board[i][j];
+              board[i][j] = 0;
+
+              hasConflicted[i][k] = true;
+              continue;
+            }
+          }
+        }
+      }
+    }
+    // 防止运算过快导致的页面刷新看不到动画效果
+    setTimeout(updateBoardView, 170);
+    return true;
+  } else {
+    return false;
+  }
+}
+</code></pre><p>展示数字与移动</p><pre><code class="JavaScript">// 展示数字
+function showNumberWithAnimation(i, j, randNumber) {
+  var numberCell = $(&#39;#number-cell-&#39;+i+&#39;-&#39;+j);
+  numberCell.css(&#39;background-color&#39;, getNumberBgColor(randNumber));
+  numberCell.css(&#39;color&#39;, getNumberColor(randNumber));
+  numberCell.text(randNumber);
+  numberCell.animate({
+    width: cellSideLength,
+    height: cellSideLength,
+    top: getPosTop(i, j),
+    left: getPosLeft(i, j),
+  },50)
+}
+
+// 移动函数
+function showMoveAnimation(fromx, fromy, tox, toy) {
+  var numberCell = $(&#39;#number-cell-&#39; + fromx + &#39;-&#39; + fromy);
+  numberCell.animate({
+    top: getPosTop(tox, toy),
+    left: getPosLeft(tox, toy)
+  }, 170);
+}
+</code></pre><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> jQuery </tag>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[你不知道的line-height]]></title>
+      <url>/2017/03/04/line-height-u-dont-know.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>line-height:normal<br>默认属性值。与浏览器和字体都有关系</p><p>line-height:<number><br>使用数值作为行高值，如</number></p><pre><code class="CSS">line-height: 1.5;
+</code></pre><p>根据当前元素的font-size大小计算。<br>假设当前文字大小为20px，则行高为1.5*20px = 30px</p><p>line-height:<length><br>使用具体长度作为行高值，如</length></p><pre><code class="CSS">line-height: 1.5em;
+line-height: 1.5rem;
+line-height: 20px;
+line-height: 20pt;
+</code></pre><p>line-height:<percent><br>使用百分比值作为行高值，如</percent></p><pre><code class="CSS">line-height: 150%;
+</code></pre><p>相对于设置了该属性的元素的font-size大小计算</p><p>line-height: inherit<br>行高继承</p><pre><code class="CSS">line-height: inherit;
+</code></pre><p>input框等元素默认行高为normal，使用inherit可使其更可控</p><p>line-height: 1.5，line-height: 150%，line-height: 1.5em有何区别？</p><ul><li>line-height: 1.5 所有可继承元素根据各自font-size计算行高</li><li>line-height: 150%，line-height: 1.5em 当前元素根据自己的font-size计算行高并继承给下面的元素</li></ul><blockquote><p>body { font-size: 14px; line-height: 1.4286; }<br>即可设置行高为20px，便于布局与计算</p></blockquote><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSS </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript数据结构——栈和队列]]></title>
+      <url>/2017/02/27/js-stack-and-quene.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><h3 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h3><p>栈是一种遵从后进先出原则的有序集合。新添加的或待删除的元素都保存在栈的末尾，即栈顶，另一端则为栈底。在栈中，新元素都靠近栈顶，旧元素都接近栈底。</p><pre><code class="JavaScript">function Stack() {
+  // 用数组来保存栈中的元素
+  var items = [];
+
+  // 添加新元素到栈顶
+  this.push = function (element) {
+    items.push(element);
+  };
+
+  // 移除栈顶的元素，并将其返回
+  this.pop = function () {
+    return items.pop();
+  };
+
+  // 仅返回栈顶元素，不做任何修改
+  this.peek = function () {
+    return items[items.length - 1];
+  };
+
+  // 判断栈是否为空，若空返回true，否则返回false
+  this.isEmpty = function () {
+    return items.length === 0;
+  };
+
+  // 返回栈中的元素个数
+  this.size = function () {
+    return items.length;
+  };
+
+  // 清空栈
+  this.clear = function () {
+    items = [];
+  };
+
+  // 将栈内元素输出到控制台
+  this.print = function () {
+    console.log(items.toString());
+  };
+}
+</code></pre><p>一个实例为十进制向二进制的转换</p><pre><code class="JavaScript">function binaryConverter(decNumber) {
+  var remStack = new Stack();
+  var rem;
+  var binaryString = &#39;&#39;;
+
+  while (decNumber &gt; 0) {
+    rem = Math.floor(decNumber % 2);
+    remStack.push(rem);
+    decNumber = Math.floor(decNumber / 2);
+  }
+
+  while (!remStack.isEmpty()) {
+    binaryString += remStack.pop().toString();
+  }
+
+  return binaryString;
+}
+</code></pre><p>由此拓展为十进制向二进制、八进制、十六进制的转换</p><pre><code class="JavaScript">function numBaseConverter(decNumber, base) {
+  var remStack = new Stack();
+  var rem;
+  var baseString = &#39;&#39;;
+  var digits = &#39;0123456789ABCDEF&#39;;
+
+  while (decNumber &gt; 0) {
+    rem = Math.floor(decNumber % base);
+    remStack.push(rem);
+    decNumber = Math.floor(decNumber / base);
+  }
+
+  while (!remStack.isEmpty()) {
+    baseString += digits[remStack.pop()];    // 对10-15进行转换
+  }
+
+  return baseString;
+}
+</code></pre><h3 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h3><p>队列是遵循先进先出原则的一组有序的项。队列在尾部添加新元素，并从顶部移除元素。最新添加的元素必须排在队列的末尾。</p><pre><code class="JavaScript">function Quene() {
+  // 用数组来保存队列中的元素
+  var items = [];
+
+  // 添加新元素到队尾
+  this.enqueue = function (element) {
+    items.push(element);
+  };
+
+  // 移除队首的元素，并将其返回
+  this.dequeue = function () {
+    return items.shift();
+  };
+
+  // 仅返回队首元素，不做任何修改
+  this.front = function () {
+    return items[0];
+  };
+
+  // 判断队列是否为空，若空返回true，否则返回false
+  this.isEmpty = function () {
+    return items.length === 0;
+  };
+
+  // 返回栈中的元素个数
+  this.size = function () {
+    return items.length;
+  };
+
+  // 清空队列
+  this.clear = function () {
+    items = [];
+  };
+
+  // 将队列内元素输出到控制台
+  this.print = function () {
+    console.log(items.toString());
+  };
+}
+</code></pre><p>优先队列实例。实现方法为设置优先级，然后在正确的位置添加元素。这是最小优先队列，即优先值较小的放置在队列前面。</p><pre><code class="JavaScript">function PriorityQueue() {
+  var items = [];
+
+  function QueueElement(element, priority) {
+    this.element = element;
+    this.priority = priority;
+  }
+
+  this.enqueue = function (element, priority) {
+    var queueElement = new QueueElement(element, priority);
+
+    if (this.isEmpty()) {
+      // 若元素为空，则直接将其入列
+      items.push(queueElement);
+    } else {
+      var added = false;
+
+      for (var i = 0, l = items.length; i &lt; l; i++) {
+        if (queueElement.priority &lt; items[i].priority) {
+          // 若有元素优先值小于此项时，将元素插入到此前
+          items.splice(i, 0, queueElement);
+          added = true;
+          break;
+        }
+      }
+
+      if (!added) {
+        // 如要添加的元素优先值大于所有现存元素，则将其添到队尾
+        items.push(queueElement);
+      }
+    }
+  };
+
+  // 其他方法与Quene实现相同
+}
+</code></pre><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[这是个盒子]]></title>
+      <url>/2017/02/21/css-3d-box.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 02:32:30 GMT+0800 (中国标准时间) --><p>直入主题</p><h4 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h4><pre><code class="HTML">&lt;div class=&#39;camera&#39;&gt;
+    &lt;div class=&#39;box&#39;&gt;
+        &lt;div class=&quot;face face1&quot;&gt;1&lt;/div&gt;
+        &lt;div class=&quot;face face2&quot;&gt;2&lt;/div&gt;
+        &lt;div class=&quot;face face3&quot;&gt;3&lt;/div&gt;
+        &lt;div class=&quot;face face4&quot;&gt;4&lt;/div&gt;
+        &lt;div class=&quot;face face5&quot;&gt;5&lt;/div&gt;
+        &lt;div class=&quot;face face6&quot;&gt;6&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p>camera 元素用来控制景深 （perspective）；<br>box 元素包裹着六个面，主要用来做动画；<br>face1-6 6个面组成一个正方体；</p><h4 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h4><pre><code class="CSS">.camera {
+    width: 200px;
+    height: 200px;
+    perspective-origin: center;
+    perspective: 200px;
+}
+.box {
+    transform-style:preserve-3d;
+    position:relative;
+    width:100%;
+    height:100%;
+    border:1px dashed #000;
+}
+
+.face {
+    width: 100px;
+    height: 100px;
+    background: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    color: white;
+    position: absolute;
+}
+</code></pre><p>And，打开你的脑洞，开启3D模式。<br>第一块板比较简单，因为它在地面正上方50像素的位置：</p><pre><code class="CSS">.face1 {
+    background: #3498db;
+    transform:translateX(50px) translateY(50px) translateZ(50px);
+}
+</code></pre><div style="text-align:center"><img src="https://ohc0m0ub0.qnssl.com/3659f5fdec1c51336351ccc40f6e3fc61475838447360.png" alt=""></div><p>第二块面板在正方体的右面：</p><pre><code class="CSS">.face2 {
+    background: #9b59b6;
+    transform-origin: 0 0;
+    transform:translateX(150px) translateY(50px) translateZ(50px) rotateY(90deg);
+}
+</code></pre><p>注意，transform 是有顺序的，先旋转，再平移 和平移之后再旋转得到的效果可能不同。<br>接着靠你的空间想象力把其他面也放置在正确的位置：</p><pre><code class="CSS">.face3 {
+    background: #f1c40f;
+    transform-origin: 0 0;
+    transform:translateX(50px) translateY(50px) translateZ(50px) rotateX(-90deg);
+}
+.face4 {
+    background: #7f8c8d;
+    transform-origin: 0 0;
+    transform:translateX(50px) translateY(150px) translateZ(50px) rotateX(-90deg);
+}
+.face5 {
+    background: #2ecc71;
+    transform-origin: 100% 100%;
+    transform: translateX(-50%) translateY(50px) translateZ(50px) rotateY(-90deg);
+}
+.face6 {
+    background: #34495e;
+    transform: translateX(50px) translateY(50px)  translateZ(-50px) rotateY(-180deg);
+}
+</code></pre><p>如何实验是否正确呢？旋转 box 试试</p><pre><code class="CSS">.box {
+    animation: rotate 4s linear infinite ;
+}
+
+@keyframes rotate{
+     0%{
+         -webkit-transform:rotateY(0) rotateX(0);
+     }
+     50%{
+         -webkit-transform:rotateY(-359.9deg) rotateX(0);
+     }
+     100% {
+         -webkit-transform:rotateY(-359.9deg) rotateX(-359.9deg);
+     }
+}
+</code></pre><div style="text-align:center"><img src="https://ohc0m0ub0.qnssl.com/3af82d0dd22e12f88bf9d6101a73cd021475838591868.gif" alt=""></div><p>陀螺仪</p><p>3d效果再搭配上陀螺仪就牛X了。</p><pre><code class="JavaScript">var box = document.querySelectorAll(&#39;.box&#39;);
+window.addEventListener(&#39;deviceorientation&#39;, function(event) {
+    var alpha = event.alpha,
+        beta = event.beta,
+        gamma = event.gamma;
+
+    box[0].style.webkitTransform = &#39;rotateX(&#39; + beta + &#39;deg) rotateY(&#39; + gamma + &#39;deg) rotateZ(&#39; + alpha + &#39;deg)&#39;;
+    box[0].style.transform = &#39;rotateX(&#39; + beta + &#39;deg) rotateY(&#39; + gamma + &#39;deg) rotateZ(&#39; + alpha + &#39;deg)&#39;;
+    box[0].style.mozTransform = &#39;rotateX(&#39; + beta + &#39;deg) rotateY(&#39; + gamma + &#39;deg) rotateZ(&#39; + alpha + &#39;deg)&#39;;
+
+}, false);
+</code></pre><p>扫码试试？</p><div style="text-align:center"><img src="https://ohc0m0ub0.qnssl.com/125fff36713cab6b1fd58f92ef90138c1475836323160.png" alt=""></div><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSS </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Canvas 魔法]]></title>
+      <url>/2017/02/17/canvas-magic.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><h3 id="不规则图形范围检测"><a href="#不规则图形范围检测" class="headerlink" title="不规则图形范围检测"></a>不规则图形范围检测</h3><div style="text-align:center"><img src="https://ohc0m0ub0.qnssl.com/beeff761e599012677c0c237b5617b4d1482160468589.gif" alt=""></div><p>当鼠标移入 png 图片非透明区域的时候，需要把图片的背景色置灰<br>那么就这个简单的需求，你会有什么解决方案？ 获取图片上某个位置是否透明？JavaScript 没有这样的 Api 吧！但是 Canvas 有。Canvas 有个 getImageData 的接口，通过这个接口可以获取到 Canvas 上每一个像素点的像素值。这么一转换的话，问题是不是就很简单了？</p><pre><code class="JavaScript">// 创建一个虚拟的 Canvas
+var canvas = document.createElement(&#39;canvas&#39;);
+var ctx = canvas.getContext(&#39;2d&#39;);
+
+// 对目标元素绑定事件
+self.$ele.on(&#39;mouseenter&#39;, $.proxy(this._copyImageToCtx, this));
+self.$ele.on(&#39;mousemove&#39;, $.proxy(this._onMouseMove, this));
+self.$ele.on(&#39;mouseleave&#39;, $.proxy(this._removeImageFromCtx, this));
+
+// onMouseMove  转换坐标，获取 Canvas Ghost 上相对于位置的色值
+var mousePos = {
+    x: event.pageX,
+    y: event.pageY
+}
+
+var pixelPos = convertCoord(mousePos, self.offset);
+var pixelColor = ctx.getImageData(pixelPos.x, pixelPos.y, 1, 1).data;
+
+// pixelColor 是个数组，有四个值，分别对应 r,g,b,a
+//
+if (pixelColor[3] !== 0) {
+    self.$ele.addClass(self.settings.hoveringClass);
+} else {
+    self.$ele.removeClass(self.settings.hoveringClass);
+}
+</code></pre><h3 id="代理事件"><a href="#代理事件" class="headerlink" title="代理事件"></a>代理事件</h3><pre><code class="JavaScript">for (var i = boxsLength - 1; i &gt;= 0; i--) {
+    var box = boxList[i];
+    // 清除 ghost 画板
+    ghostCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+    // 创建相同形状相同位置，黑色 box
+    var fakeBox = new Box(box.x, box.y, box.width, box.height, &#39;black&#39;);
+    fakeBox.drawOn(ghostCtx);
+    // 使用 getImageData 获取对应点样式
+    var pixelData = ghostCtx.getImageData(ox, oy, 1, 1).data;
+    if (pixelData[3] !== 0) {
+        // 记录选中元素
+        box.isActive = true;
+        draggingIndex = i;
+        break;
+    }
+}
+</code></pre><div style="text-align:center"><img src="https://ohc0m0ub0.qnssl.com/ce359c25f969c7f52c0548b5dbce99da1482291748607.gif" alt=""></div><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> HTML5 </tag>
+            
+            <tag> canvas </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[GET和POST的区别]]></title>
+      <url>/2017/02/12/get-or-post.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 02:32:30 GMT+0800 (中国标准时间) --><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><ol><li>根据HTTP规范，GET用于信息获取，而且应该是安全的和幂等的。<br>(1).所谓安全的意味着该操作用于获取信息而非修改信息。换句话说，GET 请求一般不应产生副作用。就是说，它仅仅是获取资源信息，就像数据库查询一样，不会修改，增加数据，不会影响资源的状态。<br>*注意：这里安全的含义仅仅是指是非修改信息。<br>(2).幂等的意味着对同一URL的多个请求应该返回同样的结果。</li></ol><blockquote><p>幂等（idempotent、idempotence）是一个数学或计算机学概念，常见于抽象代数中。幂等有一下几种定义：对于单目运算，如果一个运算对于在范围内的所有的一个数多次进行该运算所得的结果和进行一次该运算所得的结果是一样的，那么我们就称该运算是幂等的。比如绝对值运算就是一个例子，在实数集中，有abs(a)=abs(abs(a))。对于双目运算，则要求当参与运算的两个值是等值的情况下，如果满足运算结果与参与运算的两个值相等，则称该运算幂等，如求两个数的最大值的函数，有在在实数集中幂等，即max(x,x) = x。</p></blockquote><p>但在实际应用中，以上2条规定并没有这么严格。引用别人文章的例子：比如，新闻站点的头版不断更新。虽然第二次请求会返回不同的一批新闻，该操作仍然被认为是安全的和幂等的，因为它总是返回当前的新闻。从根本上说，如果目标是当用户打开一个链接时，他可以确信从自身的角度来看没有改变资源即可。</p><ol><li>根据HTTP规范，POST表示可能修改变服务器上的资源的请求。继续引用上面的例子：还是新闻以网站为例，读者对新闻发表自己的评论应该通过POST实现，因为在评论提交后站点的资源已经不同了，或者说资源被修改了。</li></ol><p>上面大概说了一下HTTP规范中GET和POST的一些原理性的问题。但在实际的做的时候，很多人却没有按照HTTP规范去做，导致这个问题的原因有很多，比如说：</p><ol><li>很多人贪方便，更新资源时用了GET，因为用POST必须要到FORM（表单），这样会麻烦一点。</li><li>对资源的增，删，改，查操作，其实都可以通过GET/POST完成，不需要用到PUT和DELETE。</li><li>另外一个是，早期的Web MVC框架设计者们并没有有意识地将URL当作抽象的资源来看待和设计，所以导致一个比较严重的问题是传统的Web MVC框架基本上都只支持GET和POST两种HTTP方法，而不支持PUT和DELETE方法。</li></ol><blockquote><p>MVC：MVC本来是存在于Desktop程序中的，M是指数据模型，V是指用户界面，C则是控制器。使用MVC的目的是将M和V的实现代码分离，从而使同一个程序可以使用不同的表现形式。</p></blockquote><p>以上3点典型地描述了老一套的风格（没有严格遵守HTTP规范），随着架构的发展，现在出现REST(Representational State Transfer)，一套支持HTTP规范的新风格，可以参考《RESTful Web Services》。</p><h3 id="表象"><a href="#表象" class="headerlink" title="表象"></a>表象</h3><ol><li>GET请求的数据会附在URL之后（就是把数据放置在HTTP协议头中），以?分割URL和传输数据，参数之间以&amp;相连<br>如：login.action?name=hyddd&amp;password=idontknow&amp;verify=%E4%BD%A0%E5%A5%BD。<br>英文字母/数字，原样发送<br>空格，转换为+<br>中文/其他字符，把字符串BASE64加密，得出如：%E4%BD%A0%E5%A5%BD，其中％XX中的XX为该符号以16进制表示的ASCII。<br>POST把提交的数据则放置在是HTTP包的包体中。</li><li>“GET方式提交的数据有大小限制（通常不大于2KB），理论上POST没有限制，可传较大量的数据，IIS4中最大为80KB，IIS5中为100KB”？？！<br>以上这句是不准确的，错误的：<br>(1).首先是”GET方式提交的数据最多只能是1024字节”，因为GET是通过URL提交数据，那么GET可提交的数据量就跟URL的长度有直接关系了。而实际上，URL不存在参数上限的问题，HTTP协议规范没有对URL长度进行限制。这个限制是特定的浏览器及服务器对它的限制。IE对URL长度的限制是2083字节(2K+35)。对于其他浏览器，如Netscape、FireFox等，理论上没有长度限制，其限制取决于操作系统的支持。<br>注意这是限制是整个URL长度，而不仅仅是你的参数值数据长度。<br>(2).理论上讲，POST是没有大小限制的，HTTP协议规范也没有进行大小限制，说“POST数据量存在80K/100K的大小限制”是不准确的，POST数据是没有限制的，起限制作用的是服务器的处理程序的处理能力。<br>对于ASP程序，Request对象处理每个表单域时存在100K的数据长度限制。但如果使用Request.BinaryRead则没有这个限制。<br>由这个延伸出去，对于IIS 6.0，微软出于安全考虑，加大了限制。我们还需要注意：<br>1).IIS 6.0默认ASP POST数据量最大为200KB，每个表单域限制是100KB。<br>2).IIS 6.0默认上传文件的最大大小是4MB。<br>3).IIS 6.0默认最大请求头是16KB。<br>IIS 6.0之前没有这些限制。<br>所以上面的80K，100K并不一定准确，具体请参考相关的IIS文档。<br>3.在ASP中，服务端获取GET请求参数用Request.QueryString，获取POST请求参数用Request.Form。在JSP中，用request.getParameter(\”XXXX\”)来获取，虽然jsp中也有request.getQueryString()方法，但使用起来比较麻烦，比如：传一个test.jsp?name=hyddd&amp;password=hyddd，用request.getQueryString()得到的是：name=hyddd&amp;password=hyddd。在PHP中，可以用$_GET和$_POST分别获取GET和POST中的数据，而$_REQUEST则可以获取GET和POST两种请求中的数据。值得注意的是，JSP中使用request和PHP中使用$_REQUEST都会有隐患，这个下次再写个文章总结。<br>4.POST的安全性要比GET的安全性高。注意：这里所说的安全性和上面GET提到的“安全”不是同个概念。上面“安全”的含义仅仅是不作数据修改，而这里安全的含义是真正的Security的含义，比如：通过GET提交数据，用户名和密码将明文出现在URL上，因为(1)登录页面有可能被浏览器缓存，(2)其他人查看浏览器的历史纪录，那么别人就可以拿到你的账号和密码了，除此之外，使用GET提交数据还可能会造成Cross-site request forgery攻击。</li></ol><p>总结一下，Get是向服务器发索取数据的一种请求，而Post是向服务器提交数据的一种请求，在FORM（表单）中，Method默认为”GET”，实质上，GET和POST只是发送机制不同，并不是一个取一个发！</p><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> HTTP </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[加载和执行JS的正确姿势]]></title>
+      <url>/2017/02/08/how-to-load-js.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>script标签是一个很“霸道”的狠角色，它的每次出现都让页面等待脚本的解析和执行。也就是说，不管当前的javascript代码是内嵌还是包含在外链文件中，页面的下载和渲染都必须停下来等待脚本执行完成。 其实，script标签的“霸道”是必须的，因为页面的生存周期中，脚本的执行可能会修改页面的内容。 总之，在解析和执行js的这个过程中，页面渲染和用户交互完全被阻塞了。</p><h3 id="脚本位置"><a href="#脚本位置" class="headerlink" title="脚本位置"></a>脚本位置</h3><p>说起脚本的位置，脑海里不禁想起来那两句真言：</p><ol><li>css放在<head>里</head></li><li>js放在前</li></ol><h3 id="组织脚本"><a href="#组织脚本" class="headerlink" title="组织脚本"></a>组织脚本</h3><p>既然每个script标签初始下载时都会阻塞页面渲染，那么我们可以通过减少页面上script标签的数量来改善这一情况。不光是外链的脚本，内嵌脚本的数量同样也要限制（毕竟执行js代码也会阻塞页面的渲染）。 多于外链的脚本，这里的情况有一点需要额外注意的地方：考虑HTTP请求会带来额外的性能开销，所以下载单个100kb的文件要比下载四个25kb的文件更快。从这个角度出发，更能说明减少外链脚本文件的数量将会改善性能。 What u should do？合并脚本！</p><h3 id="无阻塞的脚本"><a href="#无阻塞的脚本" class="headerlink" title="无阻塞的脚本"></a>无阻塞的脚本</h3><p>随着web应用的功能越丰富，所需要的js代码就越多，所以精简源代码也并不总是可行。尽管下载单个较大的js文件只产生一次HTTP请求，但这样做却会锁死浏览器一大段时间。 为了避免这种情况，需要向页面中逐步加载js文件，这样做，在某种程度上来说不会阻塞浏览器。</p><h4 id="延迟的脚本"><a href="#延迟的脚本" class="headerlink" title="延迟的脚本"></a>延迟的脚本</h4><p>HTML4为script标签定义了一个扩展属性：defer。Defer表明本元素所含的脚本不会修改DOM，因此代码能安全的延迟执行。 带有defer属性的script标签可以放在文档的任何位置（不会阻塞浏览器的其他进程，此类文件可以与页面中的其他资源并行下载），对应的js代码将在页面解析到script标签时开始下载，但并不会执行，（onload事件被出发前）才会执行。 PS：截至这本书的第一版（2010年11月），这个属性对IE和Firefox的支持性比较好（我的天居然有IE），如果真要投入到实际的项目中，不妨先去检查一下浏览器的兼容性先~</p><h4 id="动态脚本元素"><a href="#动态脚本元素" class="headerlink" title="动态脚本元素"></a>动态脚本元素</h4><pre><code class="JavaScript">var script = document.createElement(&#39;script&#39;);
+script.type = &#39;text/javascript&#39;;
+script.src = &#39;js_file.js&#39;;
+document.getElementsByTagName(&#39;body&#39;)[0].appendChild(script);
+</code></pre><p>Firefox/Opera/Chrome和Safari 3+会在script元素接收完成时出发一个load事件，所以你可以通过监听这个事件来获得脚本加载完成时的状态：</p><pre><code class="JavaScript">script.onload = function(){
+    console.log(&#39;script loaded.&#39;);
+}
+</code></pre><p>一向特立独行的IE自然有他的另一套：触发一个readystatechange事件。script元素提供一个readyState属性，有以下五种取值：</p><ol><li>“uninitialized”</li><li>“loading”</li><li>“loaded”</li><li>“interactive” 数据完成下载但尚不可用</li><li>“complete”</li></ol><p>所以</p><pre><code class="JavaScript">script.onreadystatechange = function(){
+    if (script.readyState == &#39;loaded&#39; || script.readyState == &#39;complete&#39;){
+        script.onreadystatechange = null;
+        console.log(&#39;script loaded.&#39;);
+    }
+}
+</code></pre><p>至此，我们得到了一个可以应用于广泛浏览器的动态加载脚本用的函数：</p><pre><code class="JavaScript">function loadScript(url, callback){
+    var script = document.createElement(&#39;script&#39;);
+    script.type = &#39;text/javascript&#39;;
+
+    if (script.readyState){//IE
+        script.onreadystatechange = function(){
+            if (script.readyState == &#39;loaded&#39; || script.readyState == &#39;complete&#39;){
+                script.onreadystatechange = null;
+                callback();
+            }
+        }
+    }else{
+        script.onload = function(){
+            callback();
+        }
+    }
+}
+</code></pre><p>可以这么用：</p><pre><code class="JavaScript">loadScript(&#39;file.js&#39;,function(){
+    console.log(&#39;script loaded.&#39;);
+});
+</code></pre><p>也可以这么用：</p><pre><code class="JavaScript">loadScript(&#39;file_1.js&#39;,function(){
+    loadScript(&#39;file_2.js&#39;,function(){
+        loadScript(&#39;file_3.js&#39;,function(){
+            console.log(&#39;all files are loaded.&#39;);
+        });
+    });
+});
+</code></pre><h3 id="XMLHttpRequest脚本注入"><a href="#XMLHttpRequest脚本注入" class="headerlink" title="XMLHttpRequest脚本注入"></a>XMLHttpRequest脚本注入</h3><p>标题看起来很高大上的样子，其实就是Ajax。</p><pre><code class="JavaScript">var xhr = new XMLHttpRequest();
+xhr.open(&#39;get&#39;,&#39;file.js&#39;,true);
+xhr.onreadystatechange = function(){
+    if (xhr.readyState == 4){
+        if (xhr.status &gt;= 200 &amp;&amp; xhr.status &lt; 300 || xhr.status == 304){
+            var script = document.createElement(&#39;script&#39;);
+            script.type = &#39;text/javascript&#39;;
+            script.text = xhr.responseText;
+            document.body.appendChild(script);
+        }
+    }
+};
+xhr.send(null);
+</code></pre><p>局限：跨域问题。</p><h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul><li>body闭合标签之前，将所有的script标签放到页面底部。这样能确保在脚本执行前页面已经完成了渲染。</li><li>合并脚本。页面中的script标签越少，加载也就越快，响应也更迅速。</li><li>无阻塞下载js：script标签的defer属性动态创建script元素来下载并执行代码使用XHR对象下载js代码并注入页面中</li></ul><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[从输入URL到页面加载发生了什么]]></title>
+      <url>/2017/02/07/url2page-process.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 02:32:30 GMT+0800 (中国标准时间) --><h2 id="具体过程"><a href="#具体过程" class="headerlink" title="具体过程"></a>具体过程</h2><h3 id="DNS解析"><a href="#DNS解析" class="headerlink" title="DNS解析"></a>DNS解析</h3><p>DNS解析的过程就是寻找哪台机器上有你需要资源的过程。当你在浏览器中输入一个地址时，例如www.baidu.com，其实不是百度网站真正意义上的地址。互联网上每一台计算机的唯一标识是它的IP地址，但是IP地址并不方便记忆。用户更喜欢用方便记忆的网址去寻找互联网上的其它计算机，也就是上面提到的百度的网址。所以互联网设计者需要在用户的方便性与可用性方面做一个权衡，这个权衡就是一个网址到IP地址的转换，这个过程就是DNS解析。它实际上充当了一个翻译的角色，实现了网址到IP地址的转换。网址到IP地址转换的过程是如何进行的?<br>解析过程</p><p>DNS解析是一个递归查询的过程。<br>上述图片是查找www.google.com的IP地址过程。首先在本地域名服务器中查询IP地址，如果没有找到的情况下，本地域名服务器会向根域名服务器发送一个请求，如果根域名服务器也不存在该域名时，本地域名会向com顶级域名服务器发送一个请求，依次类推下去。直到最后本地域名服务器得到google的IP地址并把它缓存到本地，供下次查询使用。从上述过程中，可以看出网址的解析是一个从右向左的过程: com -&gt; google.com -&gt; www.google.com。但是你是否发现少了点什么，根域名服务器的解析过程呢？事实上，真正的网址是www.google.com.，并不是我多打了一个.，这个.对应的就是根域名服务器，默认情况下所有的网址的最后一位都是.，既然是默认情况下，为了方便用户，通常都会省略，浏览器在请求DNS的时候会自动加上，所有网址真正的解析过程为: . -&gt; .com -&gt; google.com. -&gt; www.google.com.。<br>DNS优化</p><p>了解了DNS的过程，可以为我们带来哪些？上文中请求到google的IP地址时，经历了8个步骤，这个过程中存在多个请求(同时存在UDP和TCP请求，为什么有两种请求方式，请自行查找)。如果每次都经过这么多步骤，是否太耗时间？如何减少该过程的步骤呢？那就是DNS缓存。<br>DNS缓存</p><p>DNS存在着多级缓存，从离浏览器的距离排序的话，有以下几种: 浏览器缓存，系统缓存，路由器缓存，IPS服务器缓存，根域名服务器缓存，顶级域名服务器缓存，主域名服务器缓存。<br>在你的chrome浏览器中输入:chrome://dns/，你可以看到chrome浏览器的DNS缓存。<br>系统缓存主要存在/etc/hosts(Linux系统)中:<br>…<br>DNS负载均衡</p><p>不知道大家有没有思考过一个问题: DNS返回的IP地址是否每次都一样？如果每次都一样是否说明你请求的资源都位于同一台机器上面，那么这台机器需要多高的性能和储存才能满足亿万请求呢？其实真实的互联网世界背后存在成千上百台服务器，大型的网站甚至更多。但是在用户的眼中，它需要的只是处理他的请求，哪台机器处理请求并不重要。DNS可以返回一个合适的机器的IP给用户，例如可以根据每台机器的负载量，该机器离用户地理位置的距离等等，这种过程就是DNS负载均衡，又叫做DNS重定向。大家耳熟能详的CDN(Content Delivery Network)就是利用DNS的重定向技术，DNS服务器会返回一个跟用户最接近的点的IP地址给用户，CDN节点的服务器负责响应用户的请求，提供所需的内容。在这里打个免费的广告，我平时使用的比较多的是七牛云的CDN(免费)储存图片，作为我个人博客的图床使用。</p><h3 id="TCP连接"><a href="#TCP连接" class="headerlink" title="TCP连接"></a>TCP连接</h3><p>HTTP协议是使用TCP作为其传输层协议的，当TCP出现瓶颈时，HTTP也会受到影响。但由于TCP优化这一块我平常接触的并不是很多，再加上大学时的计算机网络的基础基本上忘完，所以这一部分我也就不在这里分析了。</p><h3 id="HTTPS协议"><a href="#HTTPS协议" class="headerlink" title="HTTPS协议"></a>HTTPS协议</h3><p>我不知道把HTTPS放在这个部分是否合适，但是放在这里好像又说的过去。HTTP报文是包裹在TCP报文中发送的，服务器端收到TCP报文时会解包提取出HTTP报文。但是这个过程中存在一定的风险，HTTP报文是明文，如果中间被截取的话会存在一些信息泄露的风险。那么在进入TCP报文之前对HTTP做一次加密就可以解决这个问题了。HTTPS协议的本质就是HTTP + SSL(or TLS)。在HTTP报文进入TCP报文之前，先使用SSL对HTTP报文进行加密。从网络的层级结构看它位于HTTP协议与TCP协议之间。<br>HTTPS过程</p><p>HTTPS在传输数据之前需要客户端与服务器进行一个握手(TLS/SSL握手)，在握手过程中将确立双方加密传输数据的密码信息。TLS/SSL使用了非对称加密，对称加密以及hash等。具体过程请参考经典的阮一峰先生的博客TLS/SSL握手过程。HTTPS相比于HTTP，虽然提供了安全保证，但是势必会带来一些时间上的损耗，如握手和加密等过程，是否使用HTTPS需要根据具体情况在安全和性能方面做出权衡。<br>HTTP请求</p><p>其实这部分又可以称为前端工程师眼中的HTTP，它主要发生在客户端。发送HTTP请求的过程就是构建HTTP请求报文并通过TCP协议中发送到服务器指定端口(HTTP协议80/8080, HTTPS协议443)。HTTP请求报文是由三部分组成: 请求行, 请求报头和请求正文。<br>请求行</p><p>格式如下:Method Request-URL HTTP-Version CRLF</p><pre><code>eg: GET index.html HTTP/1.1
+</code></pre><p>常用的方法有: GET, POST, PUT, DELETE, OPTIONS, HEAD。<br>TODO：</p><h3 id="GET和POST有什么区别？"><a href="#GET和POST有什么区别？" class="headerlink" title="GET和POST有什么区别？"></a>GET和POST有什么区别？</h3><p>请求报头</p><p>请求报头允许客户端向服务器传递请求的附加信息和客户端自身的信息。PS: 客户端不一定特指浏览器，有时候也可使用Linux下的CURL命令以及HTTP客户端测试工具等。常见的请求报头有: Accept, Accept-Charset, Accept-Encoding, Accept-Language, Content-Type, Authorization, Cookie, User-Agent等。<br>上图是使用Chrome开发者工具截取的对百度的HTTP请求以及响应报文，从图中可以看出，请求报头中使用了Accept, Accept-Encoding, Accept-Language, Cache-Control, Connection, Cookie等字段。Accept用于指定客户端用于接受哪些类型的信息，Accept-Encoding与Accept类似，它用于指定接受的编码方式。Connection设置为Keep-alive用于告诉客户端本次HTTP请求结束之后并不需要关闭TCP连接，这样可以使下次HTTP请求使用相同的TCP通道，节省TCP连接建立的时间。<br>请求正文</p><p>当使用POST, PUT等方法时，通常需要客户端向服务器传递数据。这些数据就储存在请求正文中。在请求包头中有一些与请求正文相关的信息，例如: 现在的Web应用通常采用Rest架构，请求的数据格式一般为json。这时就需要设置Content-Type: application/json。</p><h3 id="服务器处理请求并返回HTTP报文"><a href="#服务器处理请求并返回HTTP报文" class="headerlink" title="服务器处理请求并返回HTTP报文"></a>服务器处理请求并返回HTTP报文</h3><p>自然而然这部分对应的就是后端工程师眼中的HTTP。后端从在固定的端口接收到TCP报文开始，这一部分对应于编程语言中的socket。它会对TCP连接进行处理，对HTTP协议进行解析，并按照报文格式进一步封装成HTTP Request对象，供上层使用。这一部分工作一般是由Web服务器去进行，我使用过的Web服务器有Tomcat, Jetty和Netty等等。<br>HTTP响应报文也是由三部分组成: 状态码, 响应报头和响应报文。<br>状态码</p><p>状态码是由3位数组成，第一个数字定义了响应的类别，且有五种可能取值:<br>1xx：指示信息–表示请求已接收，继续处理。<br>2xx：成功–表示请求已被成功接收、理解、接受。<br>3xx：重定向–要完成请求必须进行更进一步的操作。<br>4xx：客户端错误–请求有语法错误或请求无法实现。<br>5xx：服务器端错误–服务器未能实现合法的请求。平时遇到比较常见的状态码有:200, 204, 301, 302, 304, 400, 401, 403, 404, 422, 500(分别表示什么请自行查找)。<br>TODO:<br>301和302有什么区别？<br>HTTP缓存<br>该图是本公司对状态码的一个总结，绘制而成的status code map，请大家参考。<br>响应报头</p><p>常见的响应报头字段有: Server, Connection…。<br>响应报文</p><p>服务器返回给浏览器的文本信息，通常HTML, CSS, JS, 图片等文件就放在这一部分。</p><h3 id="浏览器解析渲染页面"><a href="#浏览器解析渲染页面" class="headerlink" title="浏览器解析渲染页面"></a>浏览器解析渲染页面</h3><p>浏览器在收到HTML,CSS,JS文件后，它是如何把页面呈现到屏幕上的？下图对应的就是WebKit渲染的过程。<br>浏览器是一个边解析边渲染的过程。首先浏览器解析HTML文件构建DOM树，然后解析CSS文件构建渲染树，等到渲染树构建完成后，浏览器开始布局渲染树并将其绘制到屏幕上。这个过程比较复杂，涉及到两个概念: reflow(回流)和repain(重绘)。DOM节点中的各个元素都是以盒模型的形式存在，这些都需要浏览器去计算其位置和大小等，这个过程称为relow;当盒模型的位置,大小以及其他属性，如颜色,字体,等确定下来之后，浏览器便开始绘制内容，这个过程称为repain。页面在首次加载时必然会经历reflow和repain。reflow和repain过程是非常消耗性能的，尤其是在移动设备上，它会破坏用户体验，有时会造成页面卡顿。所以我们应该尽可能少的减少reflow和repain。<br>JS的解析是由浏览器中的JS解析引擎完成的。JS是单线程运行，也就是说，在同一个时间内只能做一件事，所有的任务都需要排队，前一个任务结束，后一个任务才能开始。但是又存在某些任务比较耗时，如IO读写等，所以需要一种机制可以先执行排在后面的任务，这就是：同步任务(synchronous)和异步任务(asynchronous)。JS的执行机制就可以看做是一个主线程加上一个任务队列(task queue)。同步任务就是放在主线程上执行的任务，异步任务是放在任务队列中的任务。所有的同步任务在主线程上执行，形成一个执行栈;异步任务有了运行结果就会在任务队列中放置一个事件；脚本运行时先依次运行执行栈，然后会从任务队列里提取事件，运行任务队列中的任务，这个过程是不断重复的，所以又叫做事件循环(Event loop)。<br>浏览器在解析过程中，如果遇到请求外部资源时，如图像,iconfont,JS等。浏览器将重复1-6过程下载该资源。请求过程是异步的，并不会影响HTML文档进行加载，但是当文档加载过程中遇到JS文件，HTML文档会挂起渲染过程，不仅要等到文档中JS文件加载完毕还要等待解析执行完毕，才会继续HTML的渲染过程。原因是因为JS有可能修改DOM结构，这就意味着JS执行完成前，后续所有资源的下载是没有必要的，这就是JS阻塞后续资源下载的根本原因。CSS文件的加载不影响JS文件的加载，但是却影响JS文件的执行。JS代码执行前浏览器必须保证CSS文件已经下载并加载完毕。</p><h2 id="Web优化"><a href="#Web优化" class="headerlink" title="Web优化"></a>Web优化</h2><p>上面部分主要介绍了一次完整的请求对应的过程，了解该过程的目的无非就是为了Web优化。在谈到Web优化之前，我们回到一个更原始的问题，Web前端的本质是什么。我的理解是: 将信息快速并友好的展示给用户并能够与用户进行交互。快速的意思就是在尽可能短的时间内完成页面的加载，试想一下当你在淘宝购买东西的时候，淘宝页面加载了10几秒才显示出物品，这个时候你还有心情去购买吗？怎么快速的完成页面的加载呢？优雅的学院派雅虎给出了常用的一些手段，也就是我们熟悉的雅虎34条军规。这34军规实际上就是围绕请求过程进行的一些优化方式。<br>如何尽快的加载资源？答案就是能不从网络中加载的资源就不从网络中加载，当我们合理使用缓存，将资源放在浏览器端，这是最快的方式。如果资源必须从网络中加载，则要考虑缩短连接时间，即DNS优化部分;减少响应内容大小，即对内容进行压缩。另一方面，如果加载的资源数比较少的话，也可以快速的响应用户。当资源到达浏览器之后，浏览器开始进行解析渲染，浏览器中最耗时的部分就是reflow，所以围绕这一部分就是考虑如何减少reflow的次数。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>写这篇文章真的非常纠结，前前后后断断续续写了两个星期，因为涉及到的东西比较多，再加上有些东西记忆的没有那么清晰了，所以不好下笔。所涉及到的大部分内容，也基本上是一笔带过，只是给读者一个浅显的认知，当遇到相关的问题时，知道如何去查询。大家可以当成一篇Web开发的科普类文章去阅读。<br>另外在这里为公司的产品打个广告，在Chrome store中搜索DHC，这是一款超级好用的Web客户端工具，囊括了很多的功能: 报文分析，API测试等等，可谓说是WEB工程师必备工具。</p><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> HTTP </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JS中let和var定义变量的区别]]></title>
+      <url>/2017/02/03/let-vs-var.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><h3 id="let和var关键字的异同"><a href="#let和var关键字的异同" class="headerlink" title="let和var关键字的异同"></a>let和var关键字的异同</h3><p>声明后未赋值，表现相同</p><pre><code class="JavaScript">&#39;use strict&#39;;
+
+(function() {
+  var varTest;
+  let letTest;
+  console.log(varTest); // 输出undefined
+  console.log(letTest); // 输出undefined
+}());
+</code></pre><p>使用未声明的变量，表现不同</p><pre><code class="JavaScript">(function() {
+  console.log(varTest); // 输出undefined(注意要注释掉下面一行才能运行)
+  console.log(letTest); // 直接报错：ReferenceError: letTest is not defined
+
+  var varTest = &#39;test var OK.&#39;;
+  let letTest = &#39;test let OK.&#39;;
+}());
+</code></pre><p>重复声明同一个变量时，表现不同</p><pre><code class="JavaScript">&#39;use strict&#39;;
+
+(function() {
+  var varTest = &#39;test var OK.&#39;;
+  let letTest = &#39;test let OK.&#39;;
+
+  var varTest = &#39;varTest changed.&#39;;
+  let letTest = &#39;letTest changed.&#39;; // 直接报错：SyntaxError: Identifier &#39;letTest&#39; has already been declared
+
+  console.log(varTest); // 输出varTest changed.(注意要注释掉上面letTest变量的重复声明才能运行)
+  console.log(letTest);
+}());
+</code></pre><p>变量作用范围，表现不同</p><pre><code class="JavaScript">&#39;use strict&#39;;
+
+(function() {
+  var varTest = &#39;test var OK.&#39;;
+  let letTest = &#39;test let OK.&#39;;
+
+  {
+    var varTest = &#39;varTest changed.&#39;;
+    let letTest = &#39;letTest changed.&#39;;
+  }
+
+  console.log(varTest); // 输出&quot;varTest changed.&quot;，内部&quot;{}&quot;中声明的varTest变量覆盖外部的letTest声明
+  console.log(letTest); // 输出&quot;test let OK.&quot;，内部&quot;{}&quot;中声明的letTest和外部的letTest不是同一个变量
+}());
+</code></pre><p>此外</p><p>var 是函数级作用域，因此在整个function 中都有用；<br>let 是块级作用域，比var更小，更灵活。<br>let 还具有</p><ol><li>不存在变量提升，一定声明后才能使用</li><li>暂时性死区，在代码块内使用let命令声明变量之前，该变量都是不可用的，不受外部变量影响</li><li>在相同作用域范围内不允许重复声明</li></ol><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Cookie、sessionStorage、localStorage是什么]]></title>
+      <url>/2017/01/31/web-storage.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>sessionStorage 和 localStorage 是HTML5 Web Storage API 提供的，可以方便的在web请求之间保存数据。有了本地数据，服务器也就松了口气。<br>sessionStorage、localStorage、cookie都是在浏览器端存储的数据，其中sessionStorage的概念很特别，引入了一个“浏览器窗口”的概念。sessionStorage是在同源的同窗口（或tab）中，始终存在的数据。也就是说只要这个浏览器窗口没有关闭，即使刷新页面或进入同源另一页面，数据仍然存在。关闭窗口后，sessionStorage即被销毁。同时“独立”打开的不同窗口，即使是同一页面，sessionStorage对象也是不同的。<br>带来的好处显而易见：</p><ol><li>减少网络流量：一旦数据保存在本地后，就可以避免再向服务器请求数据，因此减少不必要的数据请求，减少数据在浏览器和服务器间不必要地来回传递。</li><li>快速显示数据：性能好，从本地读数据比通过网络从服务器获得数据快得多，本地数据可以即时获得。再加上网页本身也可以有缓存，因此整个页面和数据都在本地的话，可以立即显示。</li><li>临时存储：很多时候数据只需要在用户浏览一组页面期间使用，关闭窗口后数据就可以丢弃了，这种情况使用sessionStorage非常方便。</li></ol><p>sessionStorage 、localStorage 和 cookie 之间的区别</p><ol><li>cookie数据始终在同源的http请求中携带（即使不需要），即cookie在浏览器和服务器间来回传递。而sessionStorage和localStorage不会自动把数据发给服务器，仅在本地保存。cookie数据还有路径（path）的概念，可以限制cookie只属于某个路径下。</li><li>存储大小限制也不同，cookie数据不能超过4k，同时因为每次http请求都会携带cookie，所以cookie只适合保存很小的数据，如会话标识。sessionStorage和localStorage 虽然也有存储大小的限制，但比cookie大得多，可以达到5M或更大。</li><li>数据有效期不同，sessionStorage：仅在当前浏览器窗口关闭前有效，自然也就不可能持久保持；localStorage：始终有效，窗口或浏览器关闭也一直保存，因此用作持久数据；cookie只在设置的cookie过期时间之前一直有效，即使窗口或浏览器关闭。</li><li>作用域不同，sessionStorage不在不同的浏览器窗口中共享，即使是同一个页面；localStorage 在所有同源窗口中都是共享的；cookie也是在所有同源窗口中都是共享的。</li><li>Web Storage 支持事件通知机制，可以将数据更新的通知发送给监听者。</li><li>Web Storage 的 api 接口使用更方便。</li></ol><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JS中的函数]]></title>
+      <url>/2017/01/23/js-function-types.html</url>
+      <content type="html"><![CDATA[<!-- build time:Fri Feb 16 2018 05:23:36 GMT+0800 (中国标准时间) --><p>普通函数<br>返回 return 语句的值</p><pre><code class="JavaScript">function add(x, y) {
+    return x + y;
+}
+</code></pre><p>async函数<br>返回 Promise 对象</p><pre><code class="JavaScript">async function asyncPrint(value, ms) {
+    await timeout(ms);
+    console.log(value);
+}
+</code></pre><p>Generater 函数<br>返回同步 Iterator 对象</p><pre><code class="JavaScript">function* gen(x, y){
+    yield x + y;
+}
+</code></pre><p>异步 Generater 函数<br>返回异步 Iterator 对象</p><pre><code class="JavaScript">async function* asyncGenerator() {
+    const result = await doSomethingAsync();
+    yield &#39;Result: &#39; + result;
+}
+</code></pre><!-- rebuild by neat -->]]></content>
+      
+        <categories>
+            
+            <category> FE </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> JavaScript </tag>
             
         </tags>
         
