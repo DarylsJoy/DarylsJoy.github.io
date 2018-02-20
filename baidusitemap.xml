@@ -4,6 +4,24 @@
 
     
   <url>
+    <loc>/2018/02/20/puppeteer-demo.html</loc>
+    <lastmod>2018-02-20T17:51:17.176Z</lastmod>
+    <data>
+        <display>
+        <title>puppeteer试玩体验</title>
+        <pubTime>2018-02-19T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="LIFE" url="/categories/LIFE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>/2018/02/16/happy-new-year.html</loc>
     <lastmod>2018-02-15T21:19:45.176Z</lastmod>
     <data>
@@ -373,9 +391,9 @@
         <title>一个愚蠢的五子棋</title>
         <pubTime>2017-03-10T16:00:00.000Z</pubTime>
         
-        <tag>JavaScript</tag>
-         
         <tag>canvas</tag>
+         
+        <tag>JavaScript</tag>
          
          
            
