@@ -2,16 +2,51 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>/2018/02/20/puppeteer-demo.html</loc>
+    <loc>/2018/02/16/happy-new-year.html</loc>
     
-    <lastmod>2018-02-20T17:51:17.176Z</lastmod>
+    <lastmod>2018-03-17T07:50:49.970Z</lastmod>
     
   </url>
   
   <url>
-    <loc>/2018/02/16/happy-new-year.html</loc>
+    <loc>/timeline/index.html</loc>
     
-    <lastmod>2018-02-15T21:19:45.176Z</lastmod>
+    <lastmod>2018-03-17T07:23:54.289Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>/tags/index.html</loc>
+    
+    <lastmod>2018-03-17T07:23:42.962Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>/links/index.html</loc>
+    
+    <lastmod>2018-03-17T07:23:33.953Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>/gallery/index.html</loc>
+    
+    <lastmod>2018-03-17T07:22:44.539Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>/about/index.html</loc>
+    
+    <lastmod>2018-03-17T03:33:44.997Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>/2018/02/20/puppeteer-demo.html</loc>
+    
+    <lastmod>2018-03-17T03:19:15.880Z</lastmod>
     
   </url>
   
@@ -187,41 +222,6 @@
     <loc>/2017/02/07/url2page-process.html</loc>
     
     <lastmod>2018-02-15T15:20:27.237Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>/timeline/index.html</loc>
-    
-    <lastmod>2018-02-14T19:37:28.679Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>/gallery/index.html</loc>
-    
-    <lastmod>2018-02-14T19:36:19.666Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>/links/index.html</loc>
-    
-    <lastmod>2018-02-14T19:33:42.809Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>/tags/index.html</loc>
-    
-    <lastmod>2018-02-14T19:24:48.944Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>/about/index.html</loc>
-    
-    <lastmod>2018-02-14T18:51:53.548Z</lastmod>
     
   </url>
   
