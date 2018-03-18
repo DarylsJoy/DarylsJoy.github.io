@@ -4,6 +4,46 @@
 
     
   <url>
+    <loc>/2018/03/18/js-parseint.html</loc>
+    <lastmod>2018-03-18T06:29:01.181Z</lastmod>
+    <data>
+        <display>
+        <title>parseInt(0.0000001) === 1</title>
+        <pubTime>2018-03-17T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>/2018/03/17/js-asynchronous-programming.html</loc>
+    <lastmod>2018-03-18T06:12:47.807Z</lastmod>
+    <data>
+        <display>
+        <title>JS异步编程方式总结</title>
+        <pubTime>2018-03-16T16:00:00.000Z</pubTime>
+        
+        <tag>JavaScript</tag>
+         
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>/2018/02/16/happy-new-year.html</loc>
     <lastmod>2018-03-17T07:50:49.970Z</lastmod>
     <data>
@@ -396,9 +436,9 @@
         <title>一个愚蠢的五子棋</title>
         <pubTime>2017-03-10T16:00:00.000Z</pubTime>
         
-        <tag>canvas</tag>
-         
         <tag>JavaScript</tag>
+         
+        <tag>canvas</tag>
          
          
            
