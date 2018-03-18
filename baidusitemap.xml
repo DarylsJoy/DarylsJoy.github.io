@@ -4,6 +4,24 @@
 
     
   <url>
+    <loc>/2018/02/20/puppeteer-demo.html</loc>
+    <lastmod>2018-03-18T14:13:18.755Z</lastmod>
+    <data>
+        <display>
+        <title>puppeteer试玩体验</title>
+        <pubTime>2018-02-19T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="FE" url="/categories/FE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>/2018/03/18/js-parseint.html</loc>
     <lastmod>2018-03-18T06:29:01.181Z</lastmod>
     <data>
@@ -65,24 +83,6 @@
     
     
     
-    
-  <url>
-    <loc>/2018/02/20/puppeteer-demo.html</loc>
-    <lastmod>2018-03-17T03:19:15.880Z</lastmod>
-    <data>
-        <display>
-        <title>puppeteer试玩体验</title>
-        <pubTime>2018-02-19T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="FE" url="/categories/FE/"/>
-          
-        </display>
-    </data>
-    </url>
-
     
   <url>
     <loc>/2017/03/09/js-2048.html</loc>
@@ -498,9 +498,9 @@
         <title>Canvas 魔法</title>
         <pubTime>2017-02-16T16:00:00.000Z</pubTime>
         
-        <tag>HTML5</tag>
-         
         <tag>canvas</tag>
+         
+        <tag>HTML5</tag>
          
          
            

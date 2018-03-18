@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>/2018/02/20/puppeteer-demo.html</loc>
+    
+    <lastmod>2018-03-18T14:13:18.755Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>/2018/03/18/js-parseint.html</loc>
     
     <lastmod>2018-03-18T06:29:01.181Z</lastmod>
@@ -54,13 +61,6 @@
     <loc>/about/index.html</loc>
     
     <lastmod>2018-03-17T03:33:44.997Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>/2018/02/20/puppeteer-demo.html</loc>
-    
-    <lastmod>2018-03-17T03:19:15.880Z</lastmod>
     
   </url>
   
